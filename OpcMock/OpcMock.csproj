@@ -7,7 +7,7 @@
     <ProjectGuid>{A73FE29B-8DAB-4BCA-8A86-960BCE716D1E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsFormsApplication1</RootNamespace>
+    <RootNamespace>OpcMock</RootNamespace>
     <AssemblyName>WindowsFormsApplication1</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OpcReader.cs" />
+    <Compile Include="OpcReaderCsv.cs" />
+    <Compile Include="OpcReadingException.cs" />
+    <Compile Include="OpcTag.cs" />
     <Compile Include="ProjectFileErrorException.cs" />
     <Compile Include="NoProjectFileException.cs" />
     <Compile Include="Overview.cs">
@@ -65,6 +69,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

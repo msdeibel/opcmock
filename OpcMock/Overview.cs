@@ -9,23 +9,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
-namespace WindowsFormsApplication1
+namespace OpcMock
 {
     public partial class Overview : Form
     {
-        public enum OpcTagQuality
-        { 
-            Bad = 0,
-            Unknown = 8,
-            Good = 192
-        }
-
         private int LOCK_ACQUISITION_RETRY_INTERVALL_IN_MS = 500;
+        
         private string FILE_EXT_DATA = ".omd";
         private string FILE_EXT_LOCK = ".lck";
 
         private string projectFilePath;
         private string lockFilePath;
+
+        private OpcReader opcReader;
 
         public Overview()
         {
@@ -39,55 +35,27 @@ namespace WindowsFormsApplication1
 
         private void SetDgvPropertiesThatTheDesignerKeepsLosing()
         {
-            this.TagQualityText.DataSource = Enum.GetNames(typeof(OpcTagQuality));
+            this.TagQualityText.DataSource = Enum.GetNames(typeof(OpcTag.OpcTagQuality));
             this.dgvOpcData.CurrentCellDirtyStateChanged += dgvOpcData_CurrentCellDirtyStateChanged;
         }
 
         private void btnReadOpcData_Click(object sender, EventArgs e)
         {
-            ReadOpcFile();
+            FillOpcDataGrid(opcReader.ReadAllTags());
         }
 
-        private void ReadOpcFile()
-        {
-            try
-            {
-                CheckProjectFilePathValue();
-
-                WaitForAndAcquireFileLock();
-
-                string[] opcLines = GetOpcData(projectFilePath);
-
-                FillOpcDataGrid(opcLines);
-            }
-            catch (NoProjectFileException)
-            {
-                MessageBox.Show("Error!\nProject file must be set.");
-            }
-            catch (ProjectFileErrorException)
-            {
-                MessageBox.Show("Error!\nCheck existence and permissions for project file " + projectFilePath);
-            }
-            finally
-            {
-                ReleaseFileLock();
-            }
-        }
-
-        private void FillOpcDataGrid(string[] opcLines)
+        private void FillOpcDataGrid(List<OpcTag> opcTags)
         {
             dgvOpcData.Rows.Clear();
 
-            foreach (string s in opcLines)
+            foreach (OpcTag o in opcTags)
             {
-                string[] opcTagParts = s.Split(';');
-
                 int newRowIndex = dgvOpcData.Rows.Add();
 
-                dgvOpcData.Rows[newRowIndex].Cells[0].Value = opcTagParts[0];
-                dgvOpcData.Rows[newRowIndex].Cells[1].Value = opcTagParts[1];
-                dgvOpcData.Rows[newRowIndex].Cells[2].Value = opcTagParts[2];
-                dgvOpcData.Rows[newRowIndex].Cells[3].Value = opcTagParts[3];
+                dgvOpcData.Rows[newRowIndex].Cells[0].Value = o.TagPath;
+                dgvOpcData.Rows[newRowIndex].Cells[1].Value = o.Value;
+                dgvOpcData.Rows[newRowIndex].Cells[2].Value = o.Quality.ToString();
+                dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)o.Quality).ToString();
             }
         }
 
@@ -101,7 +69,7 @@ namespace WindowsFormsApplication1
             {
                 string workingValue = (currentCell.Value != null) ? currentCell.Value.ToString() : "192";
 
-                dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)(Enum.Parse(typeof(OpcTagQuality), workingValue))).ToString();
+                dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)(Enum.Parse(typeof(OpcTag.OpcTagQuality), workingValue))).ToString();
             }
         }
 
@@ -109,12 +77,10 @@ namespace WindowsFormsApplication1
         {
             if (string.IsNullOrEmpty(projectFilePath))
             {
-                MessageBox.Show("Set target file name!");
+                MessageBox.Show("Set target file tagPath!");
                 
                 return;
             }
-
-            WaitForAndAcquireFileLock();
 
             WriteDataToProjectFile();
         }
@@ -140,6 +106,8 @@ namespace WindowsFormsApplication1
 
         private void WriteDataToProjectFile()
         {
+            WaitForAndAcquireFileLock();
+
             FileStream dataFileStream = File.Open(projectFilePath, FileMode.Create);
 
             StreamWriter streamWriter = new StreamWriter(dataFileStream);
@@ -165,7 +133,7 @@ namespace WindowsFormsApplication1
                 streamWriter.Flush();
                 streamWriter.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //void
             }
@@ -189,23 +157,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="targetFilePath"></param>
-        /// <exception cref="MockOPC.ProjectFileErrorException"></exception>
-        private string[] GetOpcData(string targetFilePath)
-        {
-            try
-            {
-                return File.ReadAllLines(targetFilePath);
-            }
-            catch (Exception)
-            {
-                throw new ProjectFileErrorException();
-            }
-        }
-
         private void ReleaseFileLock()
         {
             File.Delete(lockFilePath);
@@ -219,6 +170,8 @@ namespace WindowsFormsApplication1
                 File.Create(projectFilePath).Close();
 
                 lockFilePath = projectFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
+
+                opcReader = new OpcReaderCsv(projectFilePath, lockFilePath);
             }
         }
     }

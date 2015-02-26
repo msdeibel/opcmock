@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OpcMock
 {
-    class ProjectFileErrorException : Exception
+    public interface OpcReader
     {
+        List<OpcTag> ReadAllTags();
+
+        OpcTag ReadTag(string tagPath);
     }
 }

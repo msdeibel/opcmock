@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WindowsFormsApplication1
+namespace OpcMock
 {
     partial class Overview
     {
@@ -101,7 +101,7 @@ namespace WindowsFormsApplication1
             this.lblProjectFileName.Name = "lblProjectFileName";
             this.lblProjectFileName.Size = new System.Drawing.Size(85, 13);
             this.lblProjectFileName.TabIndex = 2;
-            this.lblProjectFileName.Text = "Project file name";
+            this.lblProjectFileName.Text = "Project file tagPath";
             // 
             // btnSaveData
             // 
