@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace OpcMock
 {
-    public interface OpcReader
+    public interface OpcWriter
     {
-        List<OpcTag> ReadAllTags();
+        void WriteAllTags(List<OpcTag> opcTags);
     }
 }

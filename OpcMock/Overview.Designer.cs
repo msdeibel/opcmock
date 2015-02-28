@@ -29,8 +29,8 @@ namespace OpcMock
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvOpcData = new System.Windows.Forms.DataGridView();
             this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,8 +71,8 @@ namespace OpcMock
             // 
             // TagQualityText
             // 
-            dataGridViewCellStyle1.NullValue = "Good";
-            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.NullValue = "Good";
+            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle3;
             this.TagQualityText.HeaderText = "TagQualityText";
             this.TagQualityText.Name = "TagQualityText";
             this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -80,8 +80,8 @@ namespace OpcMock
             // 
             // TagQualityValue
             // 
-            dataGridViewCellStyle2.NullValue = "192";
-            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.NullValue = "192";
+            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle4;
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
             this.TagQualityValue.ReadOnly = true;
@@ -99,7 +99,7 @@ namespace OpcMock
             this.lblProjectFileName.AutoSize = true;
             this.lblProjectFileName.Location = new System.Drawing.Point(-1, 11);
             this.lblProjectFileName.Name = "lblProjectFileName";
-            this.lblProjectFileName.Size = new System.Drawing.Size(85, 13);
+            this.lblProjectFileName.Size = new System.Drawing.Size(96, 13);
             this.lblProjectFileName.TabIndex = 2;
             this.lblProjectFileName.Text = "Project file tagPath";
             // 
@@ -122,10 +122,6 @@ namespace OpcMock
             this.btnReadOpcData.Text = "Read data";
             this.btnReadOpcData.UseVisualStyleBackColor = true;
             this.btnReadOpcData.Click += new System.EventHandler(this.btnReadOpcData_Click);
-            // 
-            // projectFileDialog
-            // 
-            this.projectFileDialog.Filter = "OPC Mock Daten|*.omd";
             // 
             // btnProjectFileDialog
             // 

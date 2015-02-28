@@ -13,15 +13,14 @@ namespace OpcMock
 {
     public partial class Overview : Form
     {
-        private int LOCK_ACQUISITION_RETRY_INTERVALL_IN_MS = 500;
-        
-        private string FILE_EXT_DATA = ".omd";
+        private string FILE_EXT_DATA = ".csv";
         private string FILE_EXT_LOCK = ".lck";
 
         private string projectFilePath;
         private string lockFilePath;
 
         private OpcReader opcReader;
+        private OpcWriter opcWriter;
 
         public Overview()
         {
@@ -31,6 +30,8 @@ namespace OpcMock
             lockFilePath = string.Empty;
 
             SetDgvPropertiesThatTheDesignerKeepsLosing();
+
+            projectFileDialog.Filter = "OPC Mock Data|*.csv";
         }
 
         private void SetDgvPropertiesThatTheDesignerKeepsLosing()
@@ -85,62 +86,27 @@ namespace OpcMock
             WriteDataToProjectFile();
         }
 
-        private void WaitForAndAcquireFileLock()
-        {
-            bool lockAcquired = false;
-
-            while (!lockAcquired)
-            {
-                try
-                {
-                    File.Create(lockFilePath).Close();
-
-                    lockAcquired = true;
-                }
-                catch (Exception)
-                {
-                    Thread.Sleep(LOCK_ACQUISITION_RETRY_INTERVALL_IN_MS);
-                }
-            }
-        }
-
         private void WriteDataToProjectFile()
         {
-            WaitForAndAcquireFileLock();
+            opcWriter = new OpcWriterCsv(projectFilePath, lockFilePath);
+            OpcTag tempOpcTag;
+            List<OpcTag> tagDataFromDgv = new List<OpcTag>();
 
-            FileStream dataFileStream = File.Open(projectFilePath, FileMode.Create);
-
-            StreamWriter streamWriter = new StreamWriter(dataFileStream);
-
-            try
+            if (dgvOpcData.Rows.Count > 0)
             {
-                if (dgvOpcData.RowCount > 0)
+                foreach (DataGridViewRow dgvr in dgvOpcData.Rows)
                 {
-                    foreach (DataGridViewRow dgvr in dgvOpcData.Rows)
+                    if (dgvr.Index < dgvOpcData.Rows.Count - 1)
                     {
+                        OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)(Convert.ToInt32(dgvr.Cells[3].FormattedValue));
 
-                        if (dgvr.Index < dgvOpcData.RowCount - 1)
-                        {
-                            streamWriter.WriteLine(dgvr.Cells[0].FormattedValue.ToString() + ';'
-                                                    + dgvr.Cells[1].FormattedValue.ToString() + ';'
-                                                    + dgvr.Cells[2].FormattedValue.ToString() + ';'
-                                                    + dgvr.Cells[3].FormattedValue.ToString()
-                                                    );
-                        }
+                        tempOpcTag = new OpcTag(dgvr.Cells[0].Value.ToString(), dgvr.Cells[1].Value.ToString(), qualityFromInt);
+
+                        tagDataFromDgv.Add(tempOpcTag);
                     }
                 }
 
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-            catch (Exception)
-            {
-                //void
-            }
-            finally
-            {
-                dataFileStream.Close();
-                ReleaseFileLock();
+                opcWriter.WriteAllTags(tagDataFromDgv);
             }
         }
 
@@ -155,11 +121,6 @@ namespace OpcMock
             {
                 throw new NoProjectFileException();
             }
-        }
-
-        private void ReleaseFileLock()
-        {
-            File.Delete(lockFilePath);
         }
 
         private void btnProjectFileDialog_Click(object sender, EventArgs e)
