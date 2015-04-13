@@ -13,6 +13,8 @@ namespace OpcMock
 {
     public partial class Overview : Form
     {
+        ///FIXME: Overview doesn't need to know about lockfiles
+
         private string FILE_EXT_DATA = ".csv";
         private string FILE_EXT_LOCK = ".lck";
 
@@ -40,6 +42,19 @@ namespace OpcMock
             this.dgvOpcData.CurrentCellDirtyStateChanged += dgvOpcData_CurrentCellDirtyStateChanged;
         }
 
+        private void btnProjectFileDialog_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.OK.Equals(projectFileDialog.ShowDialog(this)))
+            {
+                projectFilePath = projectFileDialog.FileName;
+                File.Create(projectFilePath).Close();
+
+                lockFilePath = projectFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
+
+                opcReader = new OpcReaderCsv(projectFilePath, lockFilePath);
+            }
+        }
+
         private void btnReadOpcData_Click(object sender, EventArgs e)
         {
             FillOpcDataGrid(opcReader.ReadAllTags());
@@ -57,20 +72,6 @@ namespace OpcMock
                 dgvOpcData.Rows[newRowIndex].Cells[1].Value = o.Value;
                 dgvOpcData.Rows[newRowIndex].Cells[2].Value = o.Quality.ToString();
                 dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)o.Quality).ToString();
-            }
-        }
-
-        void dgvOpcData_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            DataGridViewCell currentCell = dgvOpcData.CurrentCell;
-
-            dgvOpcData.CommitEdit(new DataGridViewDataErrorContexts());
-
-            if (currentCell.OwningColumn.Name.Equals("TagQualityText"))
-            {
-                string workingValue = (currentCell.Value != null) ? currentCell.Value.ToString() : "192";
-
-                dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)(Enum.Parse(typeof(OpcTag.OpcTagQuality), workingValue))).ToString();
             }
         }
 
@@ -123,17 +124,19 @@ namespace OpcMock
             }
         }
 
-        private void btnProjectFileDialog_Click(object sender, EventArgs e)
+        void dgvOpcData_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
-            if(DialogResult.OK.Equals(projectFileDialog.ShowDialog(this)))
+            DataGridViewCell currentCell = dgvOpcData.CurrentCell;
+
+            dgvOpcData.CommitEdit(new DataGridViewDataErrorContexts());
+
+            if (currentCell.OwningColumn.Name.Equals("TagQualityText"))
             {
-                projectFilePath = projectFileDialog.FileName;
-                File.Create(projectFilePath).Close();
+                string workingValue = (currentCell.Value != null) ? currentCell.Value.ToString() : "192";
 
-                lockFilePath = projectFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
-
-                opcReader = new OpcReaderCsv(projectFilePath, lockFilePath);
+                dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)(Enum.Parse(typeof(OpcTag.OpcTagQuality), workingValue))).ToString();
             }
         }
+
     }
 }

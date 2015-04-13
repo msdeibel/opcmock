@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LockFileAcquisitionException.cs" />
+    <Compile Include="LockFileReleaseException.cs" />
     <Compile Include="OpcCsvFileHandler.cs" />
     <Compile Include="OpcReader.cs" />
     <Compile Include="OpcReaderCsv.cs" />
