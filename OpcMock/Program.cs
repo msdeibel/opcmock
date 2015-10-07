@@ -16,7 +16,7 @@ namespace OpcMock
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Overview());
+            Application.Run(new DemoForm());
         }
     }
 }

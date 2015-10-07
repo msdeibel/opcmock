@@ -1,7 +1,7 @@
 ﻿using System;
 namespace OpcMock
 {
-    partial class Overview
+    partial class DemoForm
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -37,10 +37,15 @@ namespace OpcMock
             this.TagQualityText = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.TagQualityValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tbProjectFileName = new System.Windows.Forms.TextBox();
-            this.lblProjectFileName = new System.Windows.Forms.Label();
+            this.lblDataFileName = new System.Windows.Forms.Label();
             this.btnSaveData = new System.Windows.Forms.Button();
             this.btnReadOpcData = new System.Windows.Forms.Button();
-            this.projectFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.fdDataFile = new System.Windows.Forms.SaveFileDialog();
+            this.btnDataFileDialog = new System.Windows.Forms.Button();
+            this.tbNotes = new System.Windows.Forms.TextBox();
+            this.lblNotes = new System.Windows.Forms.Label();
+            this.lblProjectFilePath = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnProjectFileDialog = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.SuspendLayout();
@@ -54,9 +59,9 @@ namespace OpcMock
             this.TagQualityText,
             this.TagQualityValue});
             this.dgvOpcData.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dgvOpcData.Location = new System.Drawing.Point(2, 53);
+            this.dgvOpcData.Location = new System.Drawing.Point(2, 110);
             this.dgvOpcData.Name = "dgvOpcData";
-            this.dgvOpcData.Size = new System.Drawing.Size(789, 202);
+            this.dgvOpcData.Size = new System.Drawing.Size(560, 202);
             this.dgvOpcData.TabIndex = 0;
             // 
             // TagName
@@ -88,24 +93,24 @@ namespace OpcMock
             // 
             // tbProjectFileName
             // 
-            this.tbProjectFileName.Location = new System.Drawing.Point(2, 27);
+            this.tbProjectFileName.Location = new System.Drawing.Point(2, 84);
             this.tbProjectFileName.Name = "tbProjectFileName";
             this.tbProjectFileName.Size = new System.Drawing.Size(528, 20);
             this.tbProjectFileName.TabIndex = 1;
             this.tbProjectFileName.Text = "d:\\temp\\opctest";
             // 
-            // lblProjectFileName
+            // lblDataFileName
             // 
-            this.lblProjectFileName.AutoSize = true;
-            this.lblProjectFileName.Location = new System.Drawing.Point(-1, 11);
-            this.lblProjectFileName.Name = "lblProjectFileName";
-            this.lblProjectFileName.Size = new System.Drawing.Size(96, 13);
-            this.lblProjectFileName.TabIndex = 2;
-            this.lblProjectFileName.Text = "Project file tagPath";
+            this.lblDataFileName.AutoSize = true;
+            this.lblDataFileName.Location = new System.Drawing.Point(-1, 68);
+            this.lblDataFileName.Name = "lblDataFileName";
+            this.lblDataFileName.Size = new System.Drawing.Size(67, 13);
+            this.lblDataFileName.TabIndex = 2;
+            this.lblDataFileName.Text = "Datafile path";
             // 
             // btnSaveData
             // 
-            this.btnSaveData.Location = new System.Drawing.Point(2, 261);
+            this.btnSaveData.Location = new System.Drawing.Point(2, 318);
             this.btnSaveData.Name = "btnSaveData";
             this.btnSaveData.Size = new System.Drawing.Size(75, 23);
             this.btnSaveData.TabIndex = 4;
@@ -115,7 +120,7 @@ namespace OpcMock
             // 
             // btnReadOpcData
             // 
-            this.btnReadOpcData.Location = new System.Drawing.Point(360, 261);
+            this.btnReadOpcData.Location = new System.Drawing.Point(83, 318);
             this.btnReadOpcData.Name = "btnReadOpcData";
             this.btnReadOpcData.Size = new System.Drawing.Size(75, 23);
             this.btnReadOpcData.TabIndex = 5;
@@ -123,29 +128,76 @@ namespace OpcMock
             this.btnReadOpcData.UseVisualStyleBackColor = true;
             this.btnReadOpcData.Click += new System.EventHandler(this.btnReadOpcData_Click);
             // 
+            // btnDataFileDialog
+            // 
+            this.btnDataFileDialog.AutoSize = true;
+            this.btnDataFileDialog.Location = new System.Drawing.Point(536, 82);
+            this.btnDataFileDialog.Name = "btnDataFileDialog";
+            this.btnDataFileDialog.Size = new System.Drawing.Size(26, 23);
+            this.btnDataFileDialog.TabIndex = 6;
+            this.btnDataFileDialog.Text = "...";
+            this.btnDataFileDialog.UseVisualStyleBackColor = true;
+            this.btnDataFileDialog.Click += new System.EventHandler(this.btnProjectFileDialog_Click);
+            // 
+            // tbNotes
+            // 
+            this.tbNotes.Location = new System.Drawing.Point(590, 110);
+            this.tbNotes.Multiline = true;
+            this.tbNotes.Name = "tbNotes";
+            this.tbNotes.Size = new System.Drawing.Size(191, 202);
+            this.tbNotes.TabIndex = 7;
+            // 
+            // lblNotes
+            // 
+            this.lblNotes.AutoSize = true;
+            this.lblNotes.Location = new System.Drawing.Point(590, 91);
+            this.lblNotes.Name = "lblNotes";
+            this.lblNotes.Size = new System.Drawing.Size(35, 13);
+            this.lblNotes.TabIndex = 8;
+            this.lblNotes.Text = "Notes";
+            // 
+            // lblProjectFilePath
+            // 
+            this.lblProjectFilePath.AutoSize = true;
+            this.lblProjectFilePath.Location = new System.Drawing.Point(0, 28);
+            this.lblProjectFilePath.Name = "lblProjectFilePath";
+            this.lblProjectFilePath.Size = new System.Drawing.Size(77, 13);
+            this.lblProjectFilePath.TabIndex = 9;
+            this.lblProjectFilePath.Text = "Projectfile path";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(3, 44);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(527, 20);
+            this.textBox1.TabIndex = 10;
+            // 
             // btnProjectFileDialog
             // 
-            this.btnProjectFileDialog.AutoSize = true;
-            this.btnProjectFileDialog.Location = new System.Drawing.Point(536, 25);
+            this.btnProjectFileDialog.Location = new System.Drawing.Point(536, 40);
             this.btnProjectFileDialog.Name = "btnProjectFileDialog";
             this.btnProjectFileDialog.Size = new System.Drawing.Size(26, 23);
-            this.btnProjectFileDialog.TabIndex = 6;
+            this.btnProjectFileDialog.TabIndex = 11;
             this.btnProjectFileDialog.Text = "...";
             this.btnProjectFileDialog.UseVisualStyleBackColor = true;
-            this.btnProjectFileDialog.Click += new System.EventHandler(this.btnProjectFileDialog_Click);
             // 
-            // Overview
+            // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 445);
             this.Controls.Add(this.btnProjectFileDialog);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.lblProjectFilePath);
+            this.Controls.Add(this.lblNotes);
+            this.Controls.Add(this.tbNotes);
+            this.Controls.Add(this.btnDataFileDialog);
             this.Controls.Add(this.btnReadOpcData);
             this.Controls.Add(this.btnSaveData);
-            this.Controls.Add(this.lblProjectFileName);
+            this.Controls.Add(this.lblDataFileName);
             this.Controls.Add(this.tbProjectFileName);
             this.Controls.Add(this.dgvOpcData);
-            this.Name = "Overview";
+            this.Name = "DemoForm";
             this.Text = "OPC Mock";
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).EndInit();
             this.ResumeLayout(false);
@@ -162,14 +214,19 @@ namespace OpcMock
 
         private System.Windows.Forms.DataGridView dgvOpcData;
         private System.Windows.Forms.TextBox tbProjectFileName;
-        private System.Windows.Forms.Label lblProjectFileName;
+        private System.Windows.Forms.Label lblDataFileName;
         private System.Windows.Forms.Button btnSaveData;
         private System.Windows.Forms.Button btnReadOpcData;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagName;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagValue;
         private System.Windows.Forms.DataGridViewComboBoxColumn TagQualityText;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagQualityValue;
-        private System.Windows.Forms.SaveFileDialog projectFileDialog;
+        private System.Windows.Forms.SaveFileDialog fdDataFile;
+        private System.Windows.Forms.Button btnDataFileDialog;
+        private System.Windows.Forms.TextBox tbNotes;
+        private System.Windows.Forms.Label lblNotes;
+        private System.Windows.Forms.Label lblProjectFilePath;
+        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btnProjectFileDialog;
     }
 }

@@ -11,7 +11,7 @@ using System.IO;
 using System.Threading;
 namespace OpcMock
 {
-    public partial class Overview : Form
+    public partial class DemoForm : Form
     {
         ///FIXME: Overview doesn't need to know about lockfiles
 
@@ -24,7 +24,7 @@ namespace OpcMock
         private OpcReader opcReader;
         private OpcWriter opcWriter;
 
-        public Overview()
+        public DemoForm()
         {
             InitializeComponent();
 
@@ -33,7 +33,7 @@ namespace OpcMock
 
             SetDgvPropertiesThatTheDesignerKeepsLosing();
 
-            projectFileDialog.Filter = "OPC Mock Data|*.csv";
+            fdDataFile.Filter = "OPC Mock Data|*.csv";
         }
 
         private void SetDgvPropertiesThatTheDesignerKeepsLosing()
@@ -44,9 +44,9 @@ namespace OpcMock
 
         private void btnProjectFileDialog_Click(object sender, EventArgs e)
         {
-            if (DialogResult.OK.Equals(projectFileDialog.ShowDialog(this)))
+            if (DialogResult.OK.Equals(fdDataFile.ShowDialog(this)))
             {
-                projectFilePath = projectFileDialog.FileName;
+                projectFilePath = fdDataFile.FileName;
                 File.Create(projectFilePath).Close();
 
                 lockFilePath = projectFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
