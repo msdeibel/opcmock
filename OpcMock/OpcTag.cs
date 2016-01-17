@@ -25,10 +25,10 @@ namespace OpcMock
         private OpcTagQuality quality;
 
         /// <summary>
-        /// 
+        /// Initialize tag with Unknown quality
         /// </summary>
         /// <param name="tagPath">Full path of the tag on the server</param>
-        /// <param name="tagType">Type of the tag as on the server</param>
+        /// <param name="tagValue">Initial value</param>
         public OpcTag(string tagPath, string tagValue)
         {
             this.tagPath = tagPath;
@@ -38,10 +38,11 @@ namespace OpcMock
         }
 
         /// <summary>
-        /// 
+        /// Initialize Tag
         /// </summary>
         /// <param name="tagPath">Full path of the tag on the server</param>
-        /// <param name="tagType">Type of the tag as on the server</param>
+        /// <param name="tagValue">Initial value</param>
+        /// <param name="tagQuality">Initial quality</param>
         public OpcTag(string tagPath, string tagValue, OpcTagQuality tagQuality)
         {
             this.tagPath = tagPath;
@@ -78,6 +79,9 @@ namespace OpcMock
             }
         }
 
+        /// <summary>
+        /// Gets or sets the tag quality
+        /// </summary>
         public OpcTagQuality Quality
         {
             get

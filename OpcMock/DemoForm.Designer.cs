@@ -29,8 +29,8 @@ namespace OpcMock
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvOpcData = new System.Windows.Forms.DataGridView();
             this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,11 +42,12 @@ namespace OpcMock
             this.btnReadOpcData = new System.Windows.Forms.Button();
             this.fdDataFile = new System.Windows.Forms.SaveFileDialog();
             this.btnDataFileDialog = new System.Windows.Forms.Button();
-            this.tbNotes = new System.Windows.Forms.TextBox();
-            this.lblNotes = new System.Windows.Forms.Label();
+            this.tbProtocol = new System.Windows.Forms.TextBox();
+            this.lblProtocol = new System.Windows.Forms.Label();
             this.lblProjectFilePath = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnProjectFileDialog = new System.Windows.Forms.Button();
+            this.btnStep = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,8 +77,8 @@ namespace OpcMock
             // 
             // TagQualityText
             // 
-            dataGridViewCellStyle3.NullValue = "Good";
-            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.NullValue = "Good";
+            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle1;
             this.TagQualityText.HeaderText = "TagQualityText";
             this.TagQualityText.Name = "TagQualityText";
             this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -85,8 +86,8 @@ namespace OpcMock
             // 
             // TagQualityValue
             // 
-            dataGridViewCellStyle4.NullValue = "192";
-            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.NullValue = "192";
+            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle2;
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
             this.TagQualityValue.ReadOnly = true;
@@ -139,22 +140,23 @@ namespace OpcMock
             this.btnDataFileDialog.UseVisualStyleBackColor = true;
             this.btnDataFileDialog.Click += new System.EventHandler(this.btnProjectFileDialog_Click);
             // 
-            // tbNotes
+            // tbProtocol
             // 
-            this.tbNotes.Location = new System.Drawing.Point(590, 110);
-            this.tbNotes.Multiline = true;
-            this.tbNotes.Name = "tbNotes";
-            this.tbNotes.Size = new System.Drawing.Size(191, 202);
-            this.tbNotes.TabIndex = 7;
+            this.tbProtocol.Location = new System.Drawing.Point(590, 110);
+            this.tbProtocol.Multiline = true;
+            this.tbProtocol.Name = "tbProtocol";
+            this.tbProtocol.Size = new System.Drawing.Size(290, 202);
+            this.tbProtocol.TabIndex = 7;
+            this.tbProtocol.Text = "set;tagToSet;newValue;Good\r\nwait:tagToWaitFor;expectedValue;Good\r\ndummy";
             // 
-            // lblNotes
+            // lblProtocol
             // 
-            this.lblNotes.AutoSize = true;
-            this.lblNotes.Location = new System.Drawing.Point(590, 91);
-            this.lblNotes.Name = "lblNotes";
-            this.lblNotes.Size = new System.Drawing.Size(35, 13);
-            this.lblNotes.TabIndex = 8;
-            this.lblNotes.Text = "Notes";
+            this.lblProtocol.AutoSize = true;
+            this.lblProtocol.Location = new System.Drawing.Point(590, 91);
+            this.lblProtocol.Name = "lblProtocol";
+            this.lblProtocol.Size = new System.Drawing.Size(46, 13);
+            this.lblProtocol.TabIndex = 8;
+            this.lblProtocol.Text = "Protocol";
             // 
             // lblProjectFilePath
             // 
@@ -181,16 +183,27 @@ namespace OpcMock
             this.btnProjectFileDialog.Text = "...";
             this.btnProjectFileDialog.UseVisualStyleBackColor = true;
             // 
+            // btnStep
+            // 
+            this.btnStep.Location = new System.Drawing.Point(593, 327);
+            this.btnStep.Name = "btnStep";
+            this.btnStep.Size = new System.Drawing.Size(127, 27);
+            this.btnStep.TabIndex = 12;
+            this.btnStep.Text = "Step";
+            this.btnStep.UseVisualStyleBackColor = true;
+            this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
+            // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(793, 445);
+            this.ClientSize = new System.Drawing.Size(892, 445);
+            this.Controls.Add(this.btnStep);
             this.Controls.Add(this.btnProjectFileDialog);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.lblProjectFilePath);
-            this.Controls.Add(this.lblNotes);
-            this.Controls.Add(this.tbNotes);
+            this.Controls.Add(this.lblProtocol);
+            this.Controls.Add(this.tbProtocol);
             this.Controls.Add(this.btnDataFileDialog);
             this.Controls.Add(this.btnReadOpcData);
             this.Controls.Add(this.btnSaveData);
@@ -223,11 +236,12 @@ namespace OpcMock
         private System.Windows.Forms.DataGridViewTextBoxColumn TagQualityValue;
         private System.Windows.Forms.SaveFileDialog fdDataFile;
         private System.Windows.Forms.Button btnDataFileDialog;
-        private System.Windows.Forms.TextBox tbNotes;
-        private System.Windows.Forms.Label lblNotes;
+        private System.Windows.Forms.TextBox tbProtocol;
+        private System.Windows.Forms.Label lblProtocol;
         private System.Windows.Forms.Label lblProjectFilePath;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btnProjectFileDialog;
+        private System.Windows.Forms.Button btnStep;
     }
 }
 

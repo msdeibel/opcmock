@@ -53,5 +53,19 @@ namespace OpcMock
                 ReleaseFileLock();
             }
         }
+
+        public void WriteSingleTag(OpcTag opcTag)
+        {
+            WaitForAndAcquireFileLock();
+
+            string opcTagFileContent = File.ReadAllText(dataFilePath);
+
+            opcTagFileContent += opcTag.TagPath + ';'
+                            + opcTag.Value + ';'
+                            + opcTag.Quality.ToString() + ';'
+                            + ((int)(opcTag.Quality)).ToString();
+
+            File.WriteAllText(dataFilePath, opcTagFileContent);
+        }
     }
 }

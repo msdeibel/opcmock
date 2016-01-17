@@ -24,6 +24,8 @@ namespace OpcMock
         private OpcReader opcReader;
         private OpcWriter opcWriter;
 
+        private int currentProtocolLine;
+
         public DemoForm()
         {
             InitializeComponent();
@@ -34,6 +36,8 @@ namespace OpcMock
             SetDgvPropertiesThatTheDesignerKeepsLosing();
 
             fdDataFile.Filter = "OPC Mock Data|*.csv";
+
+            currentProtocolLine = 0;
         }
 
         private void SetDgvPropertiesThatTheDesignerKeepsLosing()
@@ -137,6 +141,55 @@ namespace OpcMock
                 dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)(Enum.Parse(typeof(OpcTag.OpcTagQuality), workingValue))).ToString();
             }
         }
+
+        private void btnStep_Click(object sender, EventArgs e)
+        {
+            string lineToExecute = tbProtocol.Lines[currentProtocolLine];
+
+            ExecuteProtocolLine(lineToExecute);
+        }
+
+        private void ExecuteProtocolLine(string lineToExecute) 
+        {
+            ///FIXME: seperator should be a configuration
+            string[] lineParts = lineToExecute.Split(';');
+
+            //step or wait
+            string action = lineParts[0];
+
+            string tagName = lineParts[1];
+            string tagValue = lineParts[2];
+            string tagQuality = lineParts[3];
+
+            if (action.Equals("set"))
+            {
+                //OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)(Convert.ToInt32(tagQuality));
+
+                opcWriter.WriteSingleTag(new OpcTag(tagName, tagValue, OpcTag.OpcTagQuality.Good));
+
+                FillOpcDataGrid(opcReader.ReadAllTags());
+
+                currentProtocolLine++;
+            }
+            else if (action.Equals("wait"))
+            {
+                List<OpcTag> opcTagList = opcReader.ReadAllTags();
+
+                OpcTag tagToCheck = new OpcTag(tagName, tagValue, OpcTag.OpcTagQuality.Good);
+
+                if(opcTagList.Contains(tagToCheck))
+                {
+                    FillOpcDataGrid(opcTagList);
+
+                    currentProtocolLine++;
+                }
+            }
+            else
+            {
+                throw new Exception("Illegal protocol action");
+            }
+        }
+
 
     }
 }
