@@ -114,4 +114,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="OpcCsvFileHandler_OpcCsvFileHandler_Parameter_does_not_contain_a_valid_file_system_path_" xml:space="preserve">
+    <value>Parameter does not contain a valid file system path.</value>
+  </data>
+  <data name="DemoForm_btnSaveData_Click_Set_target_file_tagPath_" xml:space="preserve">
+    <value>Set target file Path!</value>
+  </data>
 </root>

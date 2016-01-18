@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
+using OpcMock.Properties;
 
 namespace OpcMock
 {
     public class OpcCsvFileHandler
     {
-        protected const int LOCK_ACQUISITION_RETRY_INTERVALL_IN_MS = 500;
-        protected const int LOCK_ACQUISITION_DEFAULT_MAX_RETRIES = 5;
+        protected const int LockAcquisitionRetryIntervallInMs = 500;
+        protected const int LockAcquisitionDefaultMaxRetries = 5;
 
         protected string dataFilePath;
         protected string lockFilePath;
@@ -28,12 +25,12 @@ namespace OpcMock
 
             if (string.IsNullOrWhiteSpace(lockFilePath))
             {
-                throw new System.ArgumentException("Parameter does not contain a valid file system path.", lockFilePath);
+                throw new ArgumentException(Resources.OpcCsvFileHandler_OpcCsvFileHandler_Parameter_does_not_contain_a_valid_file_system_path_, lockFilePath);
             }
 
             this.dataFilePath = dataFilePath;
             this.lockFilePath = lockFilePath;
-            this.maxLockAcquisitionRetries = LOCK_ACQUISITION_DEFAULT_MAX_RETRIES;
+            this.maxLockAcquisitionRetries = LockAcquisitionDefaultMaxRetries;
         }
 
         /// <summary>
@@ -41,18 +38,11 @@ namespace OpcMock
         /// </summary>
         /// <param name="dataFilePath"></param>
         /// <param name="lockFilePath"></param>
-        /// <param name="maxLockAcquisitionRetries">If <= 0, LOCK_ACQUISITION_DEFAULT_MAX_RETRIES is used instead</param>
+        /// <param name="maxLockAcquisitionRetries">If &lt;= 0, LOCK_ACQUISITION_DEFAULT_MAX_RETRIES is used instead</param>
         public OpcCsvFileHandler(string dataFilePath, string lockFilePath, int maxLockAcquisitionRetries)
             :this(dataFilePath, lockFilePath)
         {
-            if (maxLockAcquisitionRetries > 0)
-            {
-                this.maxLockAcquisitionRetries = maxLockAcquisitionRetries;
-            }
-            else
-            {
-                this.maxLockAcquisitionRetries = LOCK_ACQUISITION_DEFAULT_MAX_RETRIES;
-            }
+            this.maxLockAcquisitionRetries = maxLockAcquisitionRetries > 0 ? maxLockAcquisitionRetries : LockAcquisitionDefaultMaxRetries;
         }
 
         /// <summary>
@@ -75,7 +65,7 @@ namespace OpcMock
                 }
                 catch (Exception)
                 {
-                    Thread.Sleep(LOCK_ACQUISITION_RETRY_INTERVALL_IN_MS);
+                    Thread.Sleep(LockAcquisitionRetryIntervallInMs);
                 }
             }
 

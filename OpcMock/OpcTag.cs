@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 
 namespace OpcMock
 {
@@ -18,36 +14,30 @@ namespace OpcMock
             Good = 192
         }
 
-        /// TODO: Add OpcTagType
-
-        private string tagPath;
-        private string value;
-        private OpcTagQuality quality;
-
         /// <summary>
         /// Initialize tag with Unknown quality
         /// </summary>
-        /// <param name="tagPath">Full path of the tag on the server</param>
+        /// <param name="path">Full path of the tag on the server</param>
         /// <param name="tagValue">Initial value</param>
-        public OpcTag(string tagPath, string tagValue)
+        public OpcTag(string path, string tagValue)
         {
-            this.tagPath = tagPath;
-            this.value = tagValue;
+            Path = path;
+            Value = tagValue;
 
-            this.quality = OpcTagQuality.Unknown;
+            Quality = OpcTagQuality.Unknown;
         }
 
         /// <summary>
         /// Initialize Tag
         /// </summary>
-        /// <param name="tagPath">Full path of the tag on the server</param>
+        /// <param name="path">Full path of the tag on the server</param>
         /// <param name="tagValue">Initial value</param>
         /// <param name="tagQuality">Initial quality</param>
-        public OpcTag(string tagPath, string tagValue, OpcTagQuality tagQuality)
+        public OpcTag(string path, string tagValue, OpcTagQuality tagQuality)
         {
-            this.tagPath = tagPath;
-            this.value = tagValue;
-            this.quality = tagQuality;
+            Path = path;
+            Value = tagValue;
+            Quality = tagQuality;
         }
 
         #region Getters and setters
@@ -55,46 +45,37 @@ namespace OpcMock
         /// <summary>
         /// Full path of the tag on the server
         /// </summary>
-        public string TagPath
-        {
-            get
-            {
-                return tagPath;
-            }
-        }
+        public string Path { get; }
 
         /// <summary>
         /// Gets or sets the string representation of the tag value
         /// </summary>
-        public string Value
-        {
-            get
-            {
-                return value;
-            }
-
-            set
-            {
-                this.value = value;
-            }
-        }
+        public string Value { get; set; }
 
         /// <summary>
         /// Gets or sets the tag quality
         /// </summary>
-        public OpcTagQuality Quality
-        {
-            get
-            {
-                return quality;
-            }
-
-            set
-            {
-                quality = value;
-            }
-        }
+        public OpcTagQuality Quality { get; set; }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            OpcTag objAsOpcTag = obj as OpcTag;
+            if (objAsOpcTag == null) return false;
+            else return Equals(objAsOpcTag);
+        }
+        public override int GetHashCode()
+        {
+            return MD5.Create(Path + Value + Quality).GetHashCode();
+        }
+        public bool Equals(OpcTag other)
+        {
+            if (other == null) return false;
+
+            return Path.Equals(other.Path) && Value.Equals(other.Value) && Quality.Equals(other.Quality);
+        }
+        // Should also override == and != operators.
     }
 }

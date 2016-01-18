@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using System.Threading;
+using System.Linq;
+using System.Windows.Forms.VisualStyles;
+using OpcMock.Properties;
+
 namespace OpcMock
 {
     public partial class DemoForm : Form
@@ -18,7 +16,7 @@ namespace OpcMock
         private string FILE_EXT_DATA = ".csv";
         private string FILE_EXT_LOCK = ".lck";
 
-        private string projectFilePath;
+        private string dataFilePath;
         private string lockFilePath;
 
         private OpcReader opcReader;
@@ -30,32 +28,41 @@ namespace OpcMock
         {
             InitializeComponent();
 
-            projectFilePath = string.Empty;
+            dataFilePath = string.Empty;
             lockFilePath = string.Empty;
 
             SetDgvPropertiesThatTheDesignerKeepsLosing();
 
-            fdDataFile.Filter = "OPC Mock Data|*.csv";
+            fdDataFile.Filter = @"OPC Mock Data|*.csv";
 
             currentProtocolLine = 0;
         }
 
+        private void DemoForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void SetDgvPropertiesThatTheDesignerKeepsLosing()
         {
-            this.TagQualityText.DataSource = Enum.GetNames(typeof(OpcTag.OpcTagQuality));
-            this.dgvOpcData.CurrentCellDirtyStateChanged += dgvOpcData_CurrentCellDirtyStateChanged;
+            TagQualityText.DataSource = Enum.GetNames(typeof(OpcTag.OpcTagQuality));
+            dgvOpcData.CurrentCellDirtyStateChanged += dgvOpcData_CurrentCellDirtyStateChanged;
         }
 
         private void btnProjectFileDialog_Click(object sender, EventArgs e)
         {
             if (DialogResult.OK.Equals(fdDataFile.ShowDialog(this)))
             {
-                projectFilePath = fdDataFile.FileName;
-                File.Create(projectFilePath).Close();
+                dataFilePath = fdDataFile.FileName;
+                if (!File.Exists(dataFilePath))
+                {
+                    File.Create(dataFilePath).Close();
+                }
 
-                lockFilePath = projectFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
+                lockFilePath = dataFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
 
-                opcReader = new OpcReaderCsv(projectFilePath, lockFilePath);
+                opcReader = new OpcReaderCsv(dataFilePath, lockFilePath);
+                opcWriter = new OpcWriterCsv(dataFilePath, lockFilePath);
             }
         }
 
@@ -72,7 +79,7 @@ namespace OpcMock
             {
                 int newRowIndex = dgvOpcData.Rows.Add();
 
-                dgvOpcData.Rows[newRowIndex].Cells[0].Value = o.TagPath;
+                dgvOpcData.Rows[newRowIndex].Cells[0].Value = o.Path;
                 dgvOpcData.Rows[newRowIndex].Cells[1].Value = o.Value;
                 dgvOpcData.Rows[newRowIndex].Cells[2].Value = o.Quality.ToString();
                 dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)o.Quality).ToString();
@@ -81,51 +88,28 @@ namespace OpcMock
 
         private void btnSaveData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(projectFilePath))
+            if (string.IsNullOrEmpty(dataFilePath))
             {
-                MessageBox.Show("Set target file tagPath!");
+                MessageBox.Show(Resources.DemoForm_btnSaveData_Click_Set_target_file_tagPath_);
                 
                 return;
             }
 
-            WriteDataToProjectFile();
+            WriteDataToFile();
         }
 
-        private void WriteDataToProjectFile()
+        private void WriteDataToFile()
         {
-            opcWriter = new OpcWriterCsv(projectFilePath, lockFilePath);
-            OpcTag tempOpcTag;
-            List<OpcTag> tagDataFromDgv = new List<OpcTag>();
+            if (dgvOpcData.Rows.Count <= 0) return;
 
-            if (dgvOpcData.Rows.Count > 0)
-            {
-                foreach (DataGridViewRow dgvr in dgvOpcData.Rows)
-                {
-                    if (dgvr.Index < dgvOpcData.Rows.Count - 1)
-                    {
-                        OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)(Convert.ToInt32(dgvr.Cells[3].FormattedValue));
+            List<OpcTag> tagDataFromDgv = (from DataGridViewRow dgvr in dgvOpcData.Rows
+                                           where (dgvr.Index < dgvOpcData.Rows.Count - 1 
+                                                    && dgvr.Cells[0].Value != null
+                                                    && dgvr.Cells[1].Value != null)
+                                           let qualityFromInt = (OpcTag.OpcTagQuality) Convert.ToInt32(dgvr.Cells[3].FormattedValue)
+                                           select new OpcTag(dgvr.Cells[0].Value.ToString(), dgvr.Cells[1].Value.ToString(), qualityFromInt)).ToList();
 
-                        tempOpcTag = new OpcTag(dgvr.Cells[0].Value.ToString(), dgvr.Cells[1].Value.ToString(), qualityFromInt);
-
-                        tagDataFromDgv.Add(tempOpcTag);
-                    }
-                }
-
-                opcWriter.WriteAllTags(tagDataFromDgv);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="targetFilePath"></param>
-        /// <exception cref="MockOPC.NotProjectFileException"></exception>
-        private void CheckProjectFilePathValue()
-        {
-            if (string.IsNullOrWhiteSpace(projectFilePath))
-            {
-                throw new NoProjectFileException();
-            }
+            opcWriter.WriteAllTags(tagDataFromDgv);
         }
 
         void dgvOpcData_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -136,36 +120,38 @@ namespace OpcMock
 
             if (currentCell.OwningColumn.Name.Equals("TagQualityText"))
             {
-                string workingValue = (currentCell.Value != null) ? currentCell.Value.ToString() : "192";
+                string workingValue = currentCell.Value?.ToString() ?? OpcTag.OpcTagQuality.Good.ToString();
 
-                dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)(Enum.Parse(typeof(OpcTag.OpcTagQuality), workingValue))).ToString();
+                dgvOpcData.Rows[currentCell.RowIndex].Cells["TagQualityValue"].Value = ((int)Enum.Parse(typeof(OpcTag.OpcTagQuality), workingValue)).ToString();
             }
         }
 
         private void btnStep_Click(object sender, EventArgs e)
         {
-            string lineToExecute = tbProtocol.Lines[currentProtocolLine];
+            string lineToExecute = rtbProtocol.Lines[currentProtocolLine];
 
             ExecuteProtocolLine(lineToExecute);
         }
 
+        ///FIXME: seperator should be a configuration
         private void ExecuteProtocolLine(string lineToExecute) 
         {
-            ///FIXME: seperator should be a configuration
             string[] lineParts = lineToExecute.Split(';');
 
             //step or wait
             string action = lineParts[0];
 
-            string tagName = lineParts[1];
-            string tagValue = lineParts[2];
-            string tagQuality = lineParts[3];
+            
 
             if (action.Equals("set"))
             {
-                //OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)(Convert.ToInt32(tagQuality));
+                string tagName = lineParts[1];
+                string tagValue = lineParts[2];
+                string tagQuality = lineParts[3];
 
-                opcWriter.WriteSingleTag(new OpcTag(tagName, tagValue, OpcTag.OpcTagQuality.Good));
+                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(tagQuality);
+
+                opcWriter.WriteSingleTag(new OpcTag(tagName, tagValue, qualityFromInt));
 
                 FillOpcDataGrid(opcReader.ReadAllTags());
 
@@ -173,6 +159,10 @@ namespace OpcMock
             }
             else if (action.Equals("wait"))
             {
+                string tagName = lineParts[1];
+                string tagValue = lineParts[2];
+                string tagQuality = lineParts[3];
+
                 List<OpcTag> opcTagList = opcReader.ReadAllTags();
 
                 OpcTag tagToCheck = new OpcTag(tagName, tagValue, OpcTag.OpcTagQuality.Good);
@@ -183,6 +173,10 @@ namespace OpcMock
 
                     currentProtocolLine++;
                 }
+            }
+            else if (action.Equals("dummy"))
+            {
+                currentProtocolLine++;
             }
             else
             {

@@ -1,28 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Threading;
 
 namespace OpcMock
 {
     class OpcReaderCsv : OpcCsvFileHandler, OpcReader
     {
-        private List<OpcTag> tagList;
-
-        private OpcReaderCsv() { }
+        private readonly List<OpcTag> tagList;
 
         /// <summary>
         /// Creates a new reader related to the given filePath
         /// </summary>
         /// <param name="dataFilePath">Full path to the .csv file</param>
+        /// <param name="lockFilePath">Full path to the .lck file</param>
         /// <exception cref="FileNotFoundException"></exception>
         public OpcReaderCsv(string dataFilePath, string lockFilePath)
             : base(dataFilePath, lockFilePath)
         {
-            this.tagList = new List<OpcTag>();
+            tagList = new List<OpcTag>();
         }
 
         public List<OpcTag> ReadAllTags()
@@ -49,18 +44,24 @@ namespace OpcMock
 
         private void SetTagListFromCsvData()
         {
-            string[] opcLines = File.ReadAllLines(dataFilePath);
-            string[] splitLine;
-            tagList.Clear();
-
-            foreach (string s in opcLines)
+            try
             {
-                splitLine = s.Split(';');
+                string[] opcLines = File.ReadAllLines(dataFilePath);
+                tagList.Clear();
 
-                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)(Convert.ToInt32(splitLine[3]));
+                foreach (string s in opcLines)
+                {
+                    string[] splitLine = s.Split(';');
 
-                tagList.Add(new OpcTag(splitLine[0], splitLine[1], qualityFromInt));
+                    OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(splitLine[3]);
+
+                    tagList.Add(new OpcTag(splitLine[0], splitLine[1], qualityFromInt));
+                }
             }
+            catch (Exception)
+            {
+            }
+            
         }
     }
 }

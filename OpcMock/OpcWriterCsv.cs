@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Threading;
+
 
 namespace OpcMock
 {
     public class OpcWriterCsv : OpcCsvFileHandler, OpcWriter
     {
-        private OpcWriterCsv() { }
-
-        public OpcWriterCsv(string dataFilePath, string lockFilePath)
+ public OpcWriterCsv(string dataFilePath, string lockFilePath)
             : base(dataFilePath, lockFilePath)
         {
             //void
@@ -20,28 +15,31 @@ namespace OpcMock
 
         public void WriteAllTags(List<OpcTag> opcTags)
         {
-            WaitForAndAcquireFileLock();
-
             FileStream dataFileStream = File.Open(dataFilePath, FileMode.Create);
-
-            StreamWriter streamWriter = new StreamWriter(dataFileStream);
 
             try
             {
+                WaitForAndAcquireFileLock();
+
+                StreamWriter streamWriter = new StreamWriter(dataFileStream);
+
                 if (opcTags.Count > 0)
                 {
                     foreach (OpcTag o in opcTags)
                     {
-                        streamWriter.WriteLine(o.TagPath + ';'
-                                                + o.Value + ';'
-                                                + o.Quality.ToString() + ';'
-                                                + ((int)(o.Quality)).ToString()
-                                                );
+                        streamWriter.WriteLine(o.Path + ';'
+                                               + o.Value + ';'
+                                               + o.Quality.ToString() + ';'
+                                               + ((int) o.Quality).ToString()
+                            );
                     }
                 }
 
                 streamWriter.Flush();
-                streamWriter.Close();
+            }
+            catch (LockFileAcquisitionException exLock)
+            {
+                System.Console.WriteLine("Locking failed");
             }
             catch (Exception)
             {
@@ -56,16 +54,27 @@ namespace OpcMock
 
         public void WriteSingleTag(OpcTag opcTag)
         {
-            WaitForAndAcquireFileLock();
+            try
+            {
+                WaitForAndAcquireFileLock();
 
-            string opcTagFileContent = File.ReadAllText(dataFilePath);
+                string opcTagFileContent = File.ReadAllText(dataFilePath);
 
-            opcTagFileContent += opcTag.TagPath + ';'
-                            + opcTag.Value + ';'
-                            + opcTag.Quality.ToString() + ';'
-                            + ((int)(opcTag.Quality)).ToString();
+                opcTagFileContent += opcTag.Path + ';'
+                                     + opcTag.Value + ';'
+                                     + opcTag.Quality.ToString() + ';'
+                                     + ((int) opcTag.Quality).ToString();
 
-            File.WriteAllText(dataFilePath, opcTagFileContent);
+                File.WriteAllText(dataFilePath, opcTagFileContent);
+            }
+            catch (LockFileAcquisitionException exLock)
+            {
+                System.Console.WriteLine("Locking failed");
+            }
+            finally
+            {
+                ReleaseFileLock();
+            }
         }
     }
 }
