@@ -66,16 +66,27 @@ namespace OpcMock
             if (objAsOpcTag == null) return false;
             else return Equals(objAsOpcTag);
         }
+
         public override int GetHashCode()
         {
             return MD5.Create(Path + Value + Quality).GetHashCode();
         }
+
         public bool Equals(OpcTag other)
         {
             if (other == null) return false;
 
             return Path.Equals(other.Path) && Value.Equals(other.Value) && Quality.Equals(other.Quality);
         }
-        // Should also override == and != operators.
+
+        public static bool operator ==(OpcTag opcTag1, OpcTag opcTag2)
+        {
+            return !(null == opcTag1) && opcTag1.Equals(opcTag2);
+        }
+
+        public static bool operator !=(OpcTag opcTag1, OpcTag opcTag2)
+        {
+            return !(opcTag1 == opcTag2);
+        }
     }
 }
