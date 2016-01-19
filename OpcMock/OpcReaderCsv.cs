@@ -51,6 +51,8 @@ namespace OpcMock
 
                 foreach (string s in opcLines)
                 {
+                    if (string.IsNullOrWhiteSpace(s)) continue;
+
                     string[] splitLine = s.Split(';');
 
                     OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(splitLine[3]);
@@ -60,6 +62,7 @@ namespace OpcMock
             }
             catch (Exception)
             {
+                throw new Exception();
             }
             
         }

@@ -68,6 +68,8 @@ namespace OpcMock
 
         private void btnReadOpcData_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(dataFilePath)) return;
+
             FillOpcDataGrid(opcReader.ReadAllTags());
         }
 
@@ -128,6 +130,8 @@ namespace OpcMock
 
         private void btnStep_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(dataFilePath)) return;
+
             string lineToExecute = rtbProtocol.Lines[currentProtocolLine];
 
             ExecuteProtocolLine(lineToExecute);
@@ -136,54 +140,46 @@ namespace OpcMock
         ///FIXME: seperator should be a configuration
         private void ExecuteProtocolLine(string lineToExecute) 
         {
-            string[] lineParts = lineToExecute.Split(';');
+            ProtocolLine protocolLine = new ProtocolLine(lineToExecute);
 
-            //step or wait
-            string action = lineParts[0];
-
-            
-
-            if (action.Equals("set"))
+            if (protocolLine.Action.Equals(ProtocolLine.Actions.Set))
             {
-                string tagName = lineParts[1];
-                string tagValue = lineParts[2];
-                string tagQuality = lineParts[3];
-
-                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(tagQuality);
-
-                opcWriter.WriteSingleTag(new OpcTag(tagName, tagValue, qualityFromInt));
+                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(protocolLine.TagQualityInt);
+                opcWriter.WriteSingleTag(new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt));
 
                 FillOpcDataGrid(opcReader.ReadAllTags());
 
-                currentProtocolLine++;
+                IncrementCurrentProtocolLine();
             }
-            else if (action.Equals("wait"))
+            else if (protocolLine.Action.Equals(ProtocolLine.Actions.Wait))
             {
-                string tagName = lineParts[1];
-                string tagValue = lineParts[2];
-                string tagQuality = lineParts[3];
-
                 List<OpcTag> opcTagList = opcReader.ReadAllTags();
 
-                OpcTag tagToCheck = new OpcTag(tagName, tagValue, OpcTag.OpcTagQuality.Good);
+                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(protocolLine.TagQualityInt);
+                OpcTag tagToCheck = new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt);
 
                 if(opcTagList.Contains(tagToCheck))
                 {
                     FillOpcDataGrid(opcTagList);
 
-                    currentProtocolLine++;
+                    IncrementCurrentProtocolLine();
                 }
             }
-            else if (action.Equals("dummy"))
+            else if (protocolLine.Action.Equals(ProtocolLine.Actions.Dummy))
             {
-                currentProtocolLine++;
+                IncrementCurrentProtocolLine();
             }
             else
             {
+                ///TODO: Create specific exception
                 throw new Exception("Illegal protocol action");
             }
         }
 
-
+        private void IncrementCurrentProtocolLine()
+        {
+            currentProtocolLine++;
+            btnStep.Text = "Execute step " + (currentProtocolLine + 1);
+        }
     }
 }

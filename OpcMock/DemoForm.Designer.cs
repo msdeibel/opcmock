@@ -29,8 +29,8 @@ namespace OpcMock
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvOpcData = new System.Windows.Forms.DataGridView();
             this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,8 +74,8 @@ namespace OpcMock
             // 
             // TagQualityText
             // 
-            dataGridViewCellStyle1.NullValue = "Good";
-            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.NullValue = "Good";
+            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle5;
             this.TagQualityText.HeaderText = "TagQualityText";
             this.TagQualityText.Name = "TagQualityText";
             this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -83,8 +83,8 @@ namespace OpcMock
             // 
             // TagQualityValue
             // 
-            dataGridViewCellStyle2.NullValue = "192";
-            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.NullValue = "192";
+            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle6;
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
             this.TagQualityValue.ReadOnly = true;
@@ -152,7 +152,7 @@ namespace OpcMock
             this.btnStep.Name = "btnStep";
             this.btnStep.Size = new System.Drawing.Size(127, 27);
             this.btnStep.TabIndex = 12;
-            this.btnStep.Text = "Step";
+            this.btnStep.Text = "Execute step 1";
             this.btnStep.UseVisualStyleBackColor = true;
             this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
             // 
@@ -162,7 +162,7 @@ namespace OpcMock
             this.rtbProtocol.Name = "rtbProtocol";
             this.rtbProtocol.Size = new System.Drawing.Size(287, 202);
             this.rtbProtocol.TabIndex = 13;
-            this.rtbProtocol.Text = "set;tagToSet;newValue;192\ndummy\nwait;tagToWaitFor;expectedValue;192\n";
+            this.rtbProtocol.Text = "Set;tagToSet;newValue;192\nDummy\nWait;tagToWaitFor;expectedValue;192\n";
             // 
             // DemoForm
             // 

@@ -60,7 +60,7 @@ namespace OpcMock
 
                 string opcTagFileContent = File.ReadAllText(dataFilePath);
 
-                opcTagFileContent += opcTag.Path + ';'
+                opcTagFileContent += '\n'+ opcTag.Path + ';'
                                      + opcTag.Value + ';'
                                      + opcTag.Quality.ToString() + ';'
                                      + ((int) opcTag.Quality).ToString();
