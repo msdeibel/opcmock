@@ -7,8 +7,8 @@ namespace OpcMock
 {
     public class OpcWriterCsv : OpcCsvFileHandler, OpcWriter
     {
- public OpcWriterCsv(string dataFilePath, string lockFilePath)
-            : base(dataFilePath, lockFilePath)
+        public OpcWriterCsv(string dataFilePath)
+            : base(dataFilePath)
         {
             //void
         }

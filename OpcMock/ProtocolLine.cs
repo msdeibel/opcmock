@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,15 +29,25 @@ namespace OpcMock
 
         private void ParseProtocolLine(string protocolLine)
         {
-            string[] lineParts = protocolLine.Split(';');
+            string[] lineParts = new string[0];
 
-            action = (Actions)Enum.Parse(typeof(Actions), lineParts[0]);
+            try
+            {
+                lineParts = protocolLine.Split(';');
 
-            if (action.Equals(Actions.Dummy)) return;
+                action = (Actions) Enum.Parse(typeof (Actions), lineParts[0]);
 
-            tagPath = lineParts[1];
-            tagValue = lineParts[2];
-            tagQualityInt = lineParts[3];
+                if (action.Equals(Actions.Dummy)) return;
+
+                tagPath = lineParts[1];
+                tagValue = lineParts[2];
+                tagQualityInt = lineParts[3];
+            }
+            catch (ArgumentException exIa)
+            {
+                throw new ProtocolActionException("Illegal protocol action: " + lineParts[0], exIa);
+            }
+
         }
 
         public Actions Action => action;

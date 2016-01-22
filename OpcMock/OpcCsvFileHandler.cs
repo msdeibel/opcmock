@@ -7,6 +7,9 @@ namespace OpcMock
 {
     public class OpcCsvFileHandler
     {
+        private string FILE_EXT_DATA = ".csv";
+        private string FILE_EXT_LOCK = ".lck";
+
         protected const int LockAcquisitionRetryIntervallInMs = 500;
         protected const int LockAcquisitionDefaultMaxRetries = 5;
 
@@ -16,20 +19,17 @@ namespace OpcMock
 
         protected OpcCsvFileHandler() { }
 
-        public OpcCsvFileHandler(string dataFilePath, string lockFilePath)
+        public OpcCsvFileHandler(string dataFilePath)
         {
+            ///FIXME: Add check on datafile extension
+
             if (!File.Exists(dataFilePath))
             {
                 throw new FileNotFoundException("File does not exist.", dataFilePath);
             }
 
-            if (string.IsNullOrWhiteSpace(lockFilePath))
-            {
-                throw new ArgumentException(Resources.OpcCsvFileHandler_OpcCsvFileHandler_Parameter_does_not_contain_a_valid_file_system_path_, lockFilePath);
-            }
-
             this.dataFilePath = dataFilePath;
-            this.lockFilePath = lockFilePath;
+            this.lockFilePath = dataFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
             this.maxLockAcquisitionRetries = LockAcquisitionDefaultMaxRetries;
         }
 
@@ -39,8 +39,8 @@ namespace OpcMock
         /// <param name="dataFilePath"></param>
         /// <param name="lockFilePath"></param>
         /// <param name="maxLockAcquisitionRetries">If &lt;= 0, LOCK_ACQUISITION_DEFAULT_MAX_RETRIES is used instead</param>
-        public OpcCsvFileHandler(string dataFilePath, string lockFilePath, int maxLockAcquisitionRetries)
-            :this(dataFilePath, lockFilePath)
+        public OpcCsvFileHandler(string dataFilePath, int maxLockAcquisitionRetries)
+            :this(dataFilePath)
         {
             this.maxLockAcquisitionRetries = maxLockAcquisitionRetries > 0 ? maxLockAcquisitionRetries : LockAcquisitionDefaultMaxRetries;
         }

@@ -11,13 +11,7 @@ namespace OpcMock
 {
     public partial class DemoForm : Form
     {
-        ///FIXME: Overview doesn't need to know about lockfiles
-
-        private string FILE_EXT_DATA = ".csv";
-        private string FILE_EXT_LOCK = ".lck";
-
         private string dataFilePath;
-        private string lockFilePath;
 
         private OpcReader opcReader;
         private OpcWriter opcWriter;
@@ -28,19 +22,9 @@ namespace OpcMock
         {
             InitializeComponent();
 
-            dataFilePath = string.Empty;
-            lockFilePath = string.Empty;
-
             SetDgvPropertiesThatTheDesignerKeepsLosing();
 
-            fdDataFile.Filter = @"OPC Mock Data|*.csv";
-
-            currentProtocolLine = 0;
-        }
-
-        private void DemoForm_Load(object sender, EventArgs e)
-        {
-
+            InitializeMembers();
         }
 
         private void SetDgvPropertiesThatTheDesignerKeepsLosing()
@@ -49,7 +33,16 @@ namespace OpcMock
             dgvOpcData.CurrentCellDirtyStateChanged += dgvOpcData_CurrentCellDirtyStateChanged;
         }
 
-        private void btnProjectFileDialog_Click(object sender, EventArgs e)
+        private void InitializeMembers()
+        {
+            dataFilePath = string.Empty;
+
+            fdDataFile.Filter = @"OPC Mock Data|*.csv";
+
+            currentProtocolLine = 0;
+        }
+
+        private void btnDataFileDialog_Click(object sender, EventArgs e)
         {
             if (DialogResult.OK.Equals(fdDataFile.ShowDialog(this)))
             {
@@ -59,10 +52,10 @@ namespace OpcMock
                     File.Create(dataFilePath).Close();
                 }
 
-                lockFilePath = dataFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
+                opcReader = new OpcReaderCsv(dataFilePath);
+                opcWriter = new OpcWriterCsv(dataFilePath);
 
-                opcReader = new OpcReaderCsv(dataFilePath, lockFilePath);
-                opcWriter = new OpcWriterCsv(dataFilePath, lockFilePath);
+                EnableButtonsAfterDataFileLoad();
             }
         }
 
@@ -71,6 +64,13 @@ namespace OpcMock
             if (string.IsNullOrWhiteSpace(dataFilePath)) return;
 
             FillOpcDataGrid(opcReader.ReadAllTags());
+        }
+
+        private void EnableButtonsAfterDataFileLoad()
+        {
+            btnSaveData.Enabled = true;
+            btnReadOpcData.Enabled = true;
+            btnStep.Enabled = true;
         }
 
         private void FillOpcDataGrid(List<OpcTag> opcTags)
@@ -137,42 +137,57 @@ namespace OpcMock
             ExecuteProtocolLine(lineToExecute);
         }
 
-        ///FIXME: seperator should be a configuration
         private void ExecuteProtocolLine(string lineToExecute) 
         {
-            ProtocolLine protocolLine = new ProtocolLine(lineToExecute);
-
-            if (protocolLine.Action.Equals(ProtocolLine.Actions.Set))
+            try
             {
-                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(protocolLine.TagQualityInt);
-                opcWriter.WriteSingleTag(new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt));
+                ProtocolLine protocolLine = new ProtocolLine(lineToExecute);
 
-                FillOpcDataGrid(opcReader.ReadAllTags());
-
-                IncrementCurrentProtocolLine();
-            }
-            else if (protocolLine.Action.Equals(ProtocolLine.Actions.Wait))
-            {
-                List<OpcTag> opcTagList = opcReader.ReadAllTags();
-
-                OpcTag.OpcTagQuality qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(protocolLine.TagQualityInt);
-                OpcTag tagToCheck = new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt);
-
-                if(opcTagList.Contains(tagToCheck))
+                if (protocolLine.Action.Equals(ProtocolLine.Actions.Set))
                 {
-                    FillOpcDataGrid(opcTagList);
-
+                    SetSingleTagFromProtocol(protocolLine);
+                }
+                else if (protocolLine.Action.Equals(ProtocolLine.Actions.Wait))
+                {
+                    CheckExpectedTagFromProtocol(protocolLine);
+                }
+                else if (protocolLine.Action.Equals(ProtocolLine.Actions.Dummy))
+                {
                     IncrementCurrentProtocolLine();
                 }
             }
-            else if (protocolLine.Action.Equals(ProtocolLine.Actions.Dummy))
+            catch (ProtocolActionException exProtocol)
             {
-                IncrementCurrentProtocolLine();
+                MessageBox.Show("Invalid protocol action for line: " + lineToExecute);
             }
-            else
+        }
+
+
+
+        private void SetSingleTagFromProtocol(ProtocolLine protocolLine)
+        {
+            OpcTag.OpcTagQuality qualityFromInt =
+                (OpcTag.OpcTagQuality) Convert.ToInt32(protocolLine.TagQualityInt);
+            opcWriter.WriteSingleTag(new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt));
+
+            FillOpcDataGrid(opcReader.ReadAllTags());
+
+            IncrementCurrentProtocolLine();
+        }
+
+        private void CheckExpectedTagFromProtocol(ProtocolLine protocolLine)
+        {
+            List<OpcTag> opcTagList = opcReader.ReadAllTags();
+
+            OpcTag.OpcTagQuality qualityFromInt =
+                (OpcTag.OpcTagQuality)Convert.ToInt32(protocolLine.TagQualityInt);
+            OpcTag tagToCheck = new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt);
+
+            if (opcTagList.Contains(tagToCheck))
             {
-                ///TODO: Create specific exception
-                throw new Exception("Illegal protocol action");
+                FillOpcDataGrid(opcTagList);
+
+                IncrementCurrentProtocolLine();
             }
         }
 

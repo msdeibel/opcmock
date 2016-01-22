@@ -59,12 +59,12 @@ namespace OpcMock
 
         #endregion
 
+        //Equals override based on: https://msdn.microsoft.com/en-us/library/336aedhh%28v=vs.85%29.aspx
+
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
-            OpcTag objAsOpcTag = obj as OpcTag;
-            if (objAsOpcTag == null) return false;
-            else return Equals(objAsOpcTag);
+            return obj is OpcTag && this == (OpcTag)obj;
         }
 
         public override int GetHashCode()
@@ -72,16 +72,11 @@ namespace OpcMock
             return MD5.Create(Path + Value + Quality).GetHashCode();
         }
 
-        public bool Equals(OpcTag other)
-        {
-            if (other == null) return false;
-
-            return Path.Equals(other.Path) && Value.Equals(other.Value) && Quality.Equals(other.Quality);
-        }
-
         public static bool operator ==(OpcTag opcTag1, OpcTag opcTag2)
         {
-            return !(null == opcTag1) && opcTag1.Equals(opcTag2);
+            return opcTag1.Path == opcTag2.Path 
+                    && opcTag1.Value == opcTag2.Value 
+                    && opcTag1.Quality == opcTag2.Quality;
         }
 
         public static bool operator !=(OpcTag opcTag1, OpcTag opcTag2)

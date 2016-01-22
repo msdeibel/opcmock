@@ -29,8 +29,8 @@ namespace OpcMock
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvOpcData = new System.Windows.Forms.DataGridView();
             this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,8 +74,8 @@ namespace OpcMock
             // 
             // TagQualityText
             // 
-            dataGridViewCellStyle5.NullValue = "Good";
-            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.NullValue = "Good";
+            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle1;
             this.TagQualityText.HeaderText = "TagQualityText";
             this.TagQualityText.Name = "TagQualityText";
             this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -83,8 +83,8 @@ namespace OpcMock
             // 
             // TagQualityValue
             // 
-            dataGridViewCellStyle6.NullValue = "192";
-            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.NullValue = "192";
+            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle2;
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
             this.TagQualityValue.ReadOnly = true;
@@ -108,6 +108,7 @@ namespace OpcMock
             // 
             // btnSaveData
             // 
+            this.btnSaveData.Enabled = false;
             this.btnSaveData.Location = new System.Drawing.Point(2, 318);
             this.btnSaveData.Name = "btnSaveData";
             this.btnSaveData.Size = new System.Drawing.Size(75, 23);
@@ -118,6 +119,7 @@ namespace OpcMock
             // 
             // btnReadOpcData
             // 
+            this.btnReadOpcData.Enabled = false;
             this.btnReadOpcData.Location = new System.Drawing.Point(83, 318);
             this.btnReadOpcData.Name = "btnReadOpcData";
             this.btnReadOpcData.Size = new System.Drawing.Size(75, 23);
@@ -135,7 +137,7 @@ namespace OpcMock
             this.btnDataFileDialog.TabIndex = 6;
             this.btnDataFileDialog.Text = "...";
             this.btnDataFileDialog.UseVisualStyleBackColor = true;
-            this.btnDataFileDialog.Click += new System.EventHandler(this.btnProjectFileDialog_Click);
+            this.btnDataFileDialog.Click += new System.EventHandler(this.btnDataFileDialog_Click);
             // 
             // lblProtocol
             // 
@@ -148,9 +150,10 @@ namespace OpcMock
             // 
             // btnStep
             // 
-            this.btnStep.Location = new System.Drawing.Point(593, 327);
+            this.btnStep.Enabled = false;
+            this.btnStep.Location = new System.Drawing.Point(593, 318);
             this.btnStep.Name = "btnStep";
-            this.btnStep.Size = new System.Drawing.Size(127, 27);
+            this.btnStep.Size = new System.Drawing.Size(127, 23);
             this.btnStep.TabIndex = 12;
             this.btnStep.Text = "Execute step 1";
             this.btnStep.UseVisualStyleBackColor = true;
@@ -180,7 +183,6 @@ namespace OpcMock
             this.Controls.Add(this.dgvOpcData);
             this.Name = "DemoForm";
             this.Text = "OPC Mock";
-            this.Load += new System.EventHandler(this.DemoForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -14,8 +14,8 @@ namespace OpcMock
         /// <param name="dataFilePath">Full path to the .csv file</param>
         /// <param name="lockFilePath">Full path to the .lck file</param>
         /// <exception cref="FileNotFoundException"></exception>
-        public OpcReaderCsv(string dataFilePath, string lockFilePath)
-            : base(dataFilePath, lockFilePath)
+        public OpcReaderCsv(string dataFilePath)
+            : base(dataFilePath)
         {
             tagList = new List<OpcTag>();
         }
