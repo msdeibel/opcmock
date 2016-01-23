@@ -15,7 +15,7 @@ namespace OpcMock
 
         public void WriteAllTags(List<OpcTag> opcTags)
         {
-            FileStream dataFileStream = File.Open(dataFilePath, FileMode.Create);
+            FileStream dataFileStream = File.Open(DataFilePath, FileMode.Create);
 
             try
             {
@@ -58,14 +58,14 @@ namespace OpcMock
             {
                 WaitForAndAcquireFileLock();
 
-                string opcTagFileContent = File.ReadAllText(dataFilePath);
+                string opcTagFileContent = File.ReadAllText(DataFilePath);
 
                 opcTagFileContent += '\n'+ opcTag.Path + ';'
                                      + opcTag.Value + ';'
                                      + opcTag.Quality.ToString() + ';'
                                      + ((int) opcTag.Quality).ToString();
 
-                File.WriteAllText(dataFilePath, opcTagFileContent);
+                File.WriteAllText(DataFilePath, opcTagFileContent);
             }
             catch (LockFileAcquisitionException exLock)
             {

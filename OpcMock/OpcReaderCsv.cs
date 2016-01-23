@@ -4,7 +4,7 @@ using System.IO;
 
 namespace OpcMock
 {
-    class OpcReaderCsv : OpcCsvFileHandler, OpcReader
+    public class OpcReaderCsv : OpcCsvFileHandler, OpcReader
     {
         private readonly List<OpcTag> tagList;
 
@@ -12,7 +12,6 @@ namespace OpcMock
         /// Creates a new reader related to the given filePath
         /// </summary>
         /// <param name="dataFilePath">Full path to the .csv file</param>
-        /// <param name="lockFilePath">Full path to the .lck file</param>
         /// <exception cref="FileNotFoundException"></exception>
         public OpcReaderCsv(string dataFilePath)
             : base(dataFilePath)
@@ -26,13 +25,13 @@ namespace OpcMock
             {
                 WaitForAndAcquireFileLock();
 
-                SetTagListFromCsvData();
+                FillTagListFromCsvData();
             }
             catch (Exception ex)
             {
                 tagList.Clear();
 
-                throw new OpcReadingException("Error while reading OPC data from file " + dataFilePath, ex);
+                throw new OpcReadingException("Error while reading OPC data from file " + DataFilePath, ex);
             }
             finally
             {
@@ -42,11 +41,11 @@ namespace OpcMock
             return tagList;
         }
 
-        private void SetTagListFromCsvData()
+        private void FillTagListFromCsvData()
         {
             try
             {
-                string[] opcLines = File.ReadAllLines(dataFilePath);
+                string[] opcLines = File.ReadAllLines(DataFilePath);
                 tagList.Clear();
 
                 foreach (string s in opcLines)
