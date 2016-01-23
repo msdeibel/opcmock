@@ -7,30 +7,50 @@ namespace OpcMock
 {
     public class OpcCsvFileHandler
     {
-        private string FILE_EXT_DATA = ".csv";
-        private string FILE_EXT_LOCK = ".lck";
+        private const string FILE_EXT_DATA = ".csv";
+        private const string FILE_EXT_LOCK = ".lck";
 
         protected const int LockAcquisitionRetryIntervallInMs = 500;
         protected const int LockAcquisitionDefaultMaxRetries = 5;
 
-        protected string dataFilePath;
-        protected string lockFilePath;
-        protected int maxLockAcquisitionRetries;
+        protected string LockFilePath { get; }
+        protected int MaxLockAcquisitionRetries { get; }
+
+        public string DataFilePath { get; }
 
         protected OpcCsvFileHandler() { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataFilePath"></param>
+        /// <exception cref="ArgumentException">In case dataFilePath ends with a wrong file extension</exception>
+        /// <exception cref="FileNotFoundException">In case the dataFilePath does not exist</exception>
         public OpcCsvFileHandler(string dataFilePath)
         {
-            ///FIXME: Add check on datafile extension
+            CheckDataFilenameExtension(dataFilePath);
 
+            CheckDataFileExistence(dataFilePath);
+
+            DataFilePath = dataFilePath;
+            LockFilePath = dataFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
+            MaxLockAcquisitionRetries = LockAcquisitionDefaultMaxRetries;
+        }
+
+        private static void CheckDataFileExistence(string dataFilePath)
+        {
             if (!File.Exists(dataFilePath))
             {
                 throw new FileNotFoundException("File does not exist.", dataFilePath);
             }
+        }
 
-            this.dataFilePath = dataFilePath;
-            this.lockFilePath = dataFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
-            this.maxLockAcquisitionRetries = LockAcquisitionDefaultMaxRetries;
+        private void CheckDataFilenameExtension(string dataFilePath)
+        {
+            if (!dataFilePath.EndsWith(FILE_EXT_DATA))
+            {
+                throw new ArgumentException("Data filename must have extension '.csv'", paramName: dataFilePath);
+            }
         }
 
         /// <summary>
@@ -42,24 +62,24 @@ namespace OpcMock
         public OpcCsvFileHandler(string dataFilePath, int maxLockAcquisitionRetries)
             :this(dataFilePath)
         {
-            this.maxLockAcquisitionRetries = maxLockAcquisitionRetries > 0 ? maxLockAcquisitionRetries : LockAcquisitionDefaultMaxRetries;
+            MaxLockAcquisitionRetries = maxLockAcquisitionRetries > 0 ? maxLockAcquisitionRetries : LockAcquisitionDefaultMaxRetries;
         }
 
         /// <summary>
         /// Checks to see if the lock file already exists. If not creates it.
         /// </summary>
-        /// <exception cref="OpcMock.LockFileAcquisitionException"></exception>
+        /// <exception cref="LockFileAcquisitionException"></exception>
         protected void WaitForAndAcquireFileLock()
         {
             bool lockAcquired = false;
             int retryCounter = 0;
 
             while (!lockAcquired
-                    && retryCounter < maxLockAcquisitionRetries)
+                    && retryCounter < MaxLockAcquisitionRetries)
             {
                 try
                 {
-                    File.Create(lockFilePath).Close();
+                    File.Create(LockFilePath).Close();
 
                     lockAcquired = true;
                 }
@@ -71,26 +91,26 @@ namespace OpcMock
 
             if (!lockAcquired)
             {
-                throw new LockFileAcquisitionException("Lockfile acquisition retries reached the maximum of " + maxLockAcquisitionRetries, lockFilePath);
+                throw new LockFileAcquisitionException("Lockfile acquisition retries reached the maximum of " + MaxLockAcquisitionRetries, LockFilePath);
             }
         }
 
         /// <summary>
         /// Releases the lock by deleting the lockfile
         /// </summary>
-        /// /// <exception cref="OpcMock.LockFileReleaseException"></exception>
+        /// /// <exception cref="LockFileReleaseException"></exception>
         protected void ReleaseFileLock()
         {
             try
             {
-                if (File.Exists(lockFilePath))
+                if (File.Exists(LockFilePath))
                 {
-                    File.Delete(lockFilePath);
+                    File.Delete(LockFilePath);
                 }
             }
             catch (Exception ex)
             {
-                throw new LockFileReleaseException("An error occured while trying to remove a lock file.", lockFilePath, ex);
+                throw new LockFileReleaseException("An error occured while trying to remove a lock file.", LockFilePath, ex);
             }
         }
     }
