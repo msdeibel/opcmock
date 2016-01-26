@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 
 namespace OpcMock
@@ -58,14 +59,37 @@ namespace OpcMock
             {
                 WaitForAndAcquireFileLock();
 
-                string opcTagFileContent = File.ReadAllText(DataFilePath);
-
-                opcTagFileContent += '\n'+ opcTag.Path + ';'
+                bool tagUpdated = false;
+                string opcTagLine = opcTag.Path + ';'
                                      + opcTag.Value + ';'
                                      + opcTag.Quality.ToString() + ';'
-                                     + ((int) opcTag.Quality).ToString();
+                                     + ((int)opcTag.Quality).ToString();
 
-                File.WriteAllText(DataFilePath, opcTagFileContent);
+                List<string> opcTagFileContent = File.ReadAllLines(DataFilePath).ToList();
+
+                if (opcTagFileContent.Count == 0)
+                {
+                    opcTagFileContent.Add(opcTagLine);
+                }
+                else
+                {
+                    for (int i = 0; i < opcTagFileContent.Count; i++)
+                    {
+                        if (opcTagFileContent[i].StartsWith(opcTag.Path))
+                        {
+                            opcTagFileContent[i] = opcTagLine;
+                            tagUpdated = true;
+                            break;
+                        }
+                    }
+
+                    if (!tagUpdated)
+                    {
+                        opcTagFileContent.Add(opcTagLine);
+                    }
+                }
+
+                File.WriteAllText(DataFilePath, string.Join(Environment.NewLine, opcTagFileContent.ToArray()));
             }
             catch (LockFileAcquisitionException exLock)
             {
