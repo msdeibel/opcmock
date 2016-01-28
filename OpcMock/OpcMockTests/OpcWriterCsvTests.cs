@@ -10,29 +10,15 @@ using System.Threading.Tasks;
 namespace OpcMock.Tests
 {
     [TestClass()]
-    public class OpcWriterCsvTests
+    public class OpcWriterCsvTests : OpcMockTestsBase
     {
-        private TestContext testContext;
-        private string dataFilePath;
         private OpcWriterCsv opcWriterCsv;
-
-        public TestContext TestContext
-        {
-            get { return this.testContext; }
-            set { this.testContext = value; }
-        }
 
         [TestInitialize]
         public void TestInitialize()
         {
             dataFilePath = TestContext.TestDir + "\\testdatafile.csv";
         }
-
-        //[TestMethod()]
-        //public void OpcWriterCsvTest()
-        //{
-        //    //Already tested in OpcCsvFileHandlerTests.cs
-        //}
 
         [TestMethod()]
         public void Write_All_Tags_Works_With_Empty_DataFile()
@@ -115,9 +101,7 @@ namespace OpcMock.Tests
             CreateDataFileIfDoesNotExist();
 
             opcWriterCsv = new OpcWriterCsv(dataFilePath);
-
             opcWriterCsv.WriteSingleTag(new OpcTag("opcTagSingle", "opcValueSingle", OpcTag.OpcTagQuality.Good));
-
             opcWriterCsv.WriteSingleTag(new OpcTag("opcTagSingle2", "opcValueSingle2", OpcTag.OpcTagQuality.Bad));
 
             string expectedFileContent = "opcTagSingle;opcValueSingle;Good;192" + Environment.NewLine
@@ -152,23 +136,6 @@ namespace OpcMock.Tests
 
             DeleteDataFileIfExists();
 
-        }
-
-
-        private void CreateDataFileIfDoesNotExist()
-        {
-            if (!File.Exists(dataFilePath))
-            {
-                File.Create(dataFilePath).Close();
-            }
-        }
-
-        private void DeleteDataFileIfExists()
-        {
-            if (File.Exists(dataFilePath))
-            {
-                File.Delete(dataFilePath);
-            }
         }
     }
 }

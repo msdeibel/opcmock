@@ -67,26 +67,16 @@ namespace OpcMock
 
                 List<string> opcTagFileContent = File.ReadAllLines(DataFilePath).ToList();
 
-                if (opcTagFileContent.Count == 0)
+                int tagPostionInFile = FileContentContainsTag(opcTagFileContent, opcTag.Path);
+
+                if (IsFileEmpty(opcTagFileContent)
+                    || TagNotInFile(tagPostionInFile))
                 {
                     opcTagFileContent.Add(opcTagLine);
                 }
                 else
                 {
-                    for (int i = 0; i < opcTagFileContent.Count; i++)
-                    {
-                        if (opcTagFileContent[i].StartsWith(opcTag.Path))
-                        {
-                            opcTagFileContent[i] = opcTagLine;
-                            tagUpdated = true;
-                            break;
-                        }
-                    }
-
-                    if (!tagUpdated)
-                    {
-                        opcTagFileContent.Add(opcTagLine);
-                    }
+                    opcTagFileContent[tagPostionInFile] = opcTagLine;
                 }
 
                 File.WriteAllText(DataFilePath, string.Join(Environment.NewLine, opcTagFileContent.ToArray()));
@@ -99,6 +89,37 @@ namespace OpcMock
             {
                 ReleaseFileLock();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="opcTagFileContent"></param>
+        /// <param name="tagPath"></param>
+        /// <returns>Index of the line that contains the tag; -1 if tag is not found</returns>
+        private int FileContentContainsTag(List<string> opcTagFileContent, string tagPath)
+        {
+            int positionInFile = -1;
+
+            for (int i = 0; i < opcTagFileContent.Count; i++)
+            {
+                if (opcTagFileContent[i].StartsWith(tagPath))
+                {
+                    return i;
+                }
+            }
+
+            return positionInFile;
+        }
+
+        private static bool TagNotInFile(int tagPostionInFile)
+        {
+            return tagPostionInFile == -1;
+        }
+
+        private static bool IsFileEmpty(List<string> opcTagFileContent)
+        {
+            return opcTagFileContent.Count == 0;
         }
     }
 }

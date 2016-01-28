@@ -10,17 +10,9 @@ using System.Threading.Tasks;
 namespace OpcMock.Tests
 {
     [TestClass()]
-    public class OpcCsvFileHandlerTests
+    public class OpcCsvFileHandlerTests : OpcMockTestsBase
     {
-        private TestContext testContext;
-        private string dataFilePath;
         private int lockAcquistionRetries;
-
-        public TestContext TestContext
-        {
-            get { return this.testContext; }
-            set { this.testContext = value; }
-        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -59,22 +51,6 @@ namespace OpcMock.Tests
             DeleteDataFileIfExists();
 
             OpcCsvFileHandler ocfh = new OpcCsvFileHandler(dataFilePath, lockAcquistionRetries);
-        }
-
-        private void CreateDataFileIfDoesNotExist()
-        {
-            if (!File.Exists(dataFilePath))
-            {
-                File.Create(dataFilePath).Close();
-            }
-        }
-
-        private void DeleteDataFileIfExists()
-        {
-            if (File.Exists(dataFilePath))
-            {
-                File.Delete(dataFilePath);
-            }
         }
     }
 }
