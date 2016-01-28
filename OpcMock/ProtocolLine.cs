@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpcMock
 {
-    class ProtocolLine
+    public class ProtocolLine
     {
         public enum Actions { Set, Wait, Dummy }
 
@@ -17,6 +17,10 @@ namespace OpcMock
         private string tagValue;
         private string tagQualityInt;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="protocolLine">Format: "Set;tagPath;tagValue;192"</param>
         public ProtocolLine(string protocolLine)
         {
             if (string.IsNullOrWhiteSpace(protocolLine))
@@ -35,19 +39,29 @@ namespace OpcMock
             {
                 lineParts = protocolLine.Split(';');
 
-                action = (Actions) Enum.Parse(typeof (Actions), lineParts[0]);
+                action = ParseAction(lineParts[0].Trim());
 
-                if (action.Equals(Actions.Dummy)) return;
+                if (IsDummyAction()) return;
 
-                tagPath = lineParts[1];
-                tagValue = lineParts[2];
-                tagQualityInt = lineParts[3];
+                tagPath = lineParts[1].Trim();
+                tagValue = lineParts[2].Trim();
+                tagQualityInt = lineParts[3].Trim();
             }
             catch (ArgumentException exIa)
             {
                 throw new ProtocolActionException("Illegal protocol action: " + lineParts[0], exIa);
             }
 
+        }
+
+        private static Actions ParseAction(string actionLinePart)
+        {
+            return (Actions)Enum.Parse(typeof(Actions), actionLinePart);
+        }
+
+        private bool IsDummyAction()
+        {
+            return action.Equals(Actions.Dummy);
         }
 
         public Actions Action => action;
