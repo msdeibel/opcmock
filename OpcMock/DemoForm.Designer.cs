@@ -40,11 +40,16 @@ namespace OpcMock
             this.lblDataFileName = new System.Windows.Forms.Label();
             this.btnSaveData = new System.Windows.Forms.Button();
             this.btnReadOpcData = new System.Windows.Forms.Button();
-            this.fdDataFile = new System.Windows.Forms.SaveFileDialog();
+            this.sfdDataFile = new System.Windows.Forms.SaveFileDialog();
             this.btnDataFileDialog = new System.Windows.Forms.Button();
             this.lblProtocol = new System.Windows.Forms.Label();
             this.btnStep = new System.Windows.Forms.Button();
             this.rtbProtocol = new System.Windows.Forms.RichTextBox();
+            this.lblProjectFilePath = new System.Windows.Forms.Label();
+            this.tbProjectFilePath = new System.Windows.Forms.TextBox();
+            this.sfdProjectFile = new System.Windows.Forms.SaveFileDialog();
+            this.btnProjectFileDialog = new System.Windows.Forms.Button();
+            this.btnSaveProjectFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -167,11 +172,53 @@ namespace OpcMock
             this.rtbProtocol.TabIndex = 13;
             this.rtbProtocol.Text = "Set;tagToSet;newValue;192\nDummy\nWait;tagToWaitFor;expectedValue;192\n";
             // 
+            // lblProjectFilePath
+            // 
+            this.lblProjectFilePath.AutoSize = true;
+            this.lblProjectFilePath.Location = new System.Drawing.Point(0, 9);
+            this.lblProjectFilePath.Name = "lblProjectFilePath";
+            this.lblProjectFilePath.Size = new System.Drawing.Size(77, 13);
+            this.lblProjectFilePath.TabIndex = 14;
+            this.lblProjectFilePath.Text = "Projectfile path";
+            // 
+            // tbProjectFilePath
+            // 
+            this.tbProjectFilePath.Location = new System.Drawing.Point(3, 25);
+            this.tbProjectFilePath.Name = "tbProjectFilePath";
+            this.tbProjectFilePath.Size = new System.Drawing.Size(528, 20);
+            this.tbProjectFilePath.TabIndex = 15;
+            this.tbProjectFilePath.Text = "d:\\temp\\opctest";
+            // 
+            // btnProjectFileDialog
+            // 
+            this.btnProjectFileDialog.AutoSize = true;
+            this.btnProjectFileDialog.Location = new System.Drawing.Point(537, 22);
+            this.btnProjectFileDialog.Name = "btnProjectFileDialog";
+            this.btnProjectFileDialog.Size = new System.Drawing.Size(26, 23);
+            this.btnProjectFileDialog.TabIndex = 16;
+            this.btnProjectFileDialog.Text = "...";
+            this.btnProjectFileDialog.UseVisualStyleBackColor = true;
+            this.btnProjectFileDialog.Click += new System.EventHandler(this.btnSaveDataFile_Click);
+            // 
+            // btnSaveProjectFile
+            // 
+            this.btnSaveProjectFile.Location = new System.Drawing.Point(593, 22);
+            this.btnSaveProjectFile.Name = "btnSaveProjectFile";
+            this.btnSaveProjectFile.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveProjectFile.TabIndex = 17;
+            this.btnSaveProjectFile.Text = "Save project";
+            this.btnSaveProjectFile.UseVisualStyleBackColor = true;
+            this.btnSaveProjectFile.Click += new System.EventHandler(this.btnSaveProjectFile_Click);
+            // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(892, 445);
+            this.Controls.Add(this.btnSaveProjectFile);
+            this.Controls.Add(this.btnProjectFileDialog);
+            this.Controls.Add(this.tbProjectFilePath);
+            this.Controls.Add(this.lblProjectFilePath);
             this.Controls.Add(this.rtbProtocol);
             this.Controls.Add(this.btnStep);
             this.Controls.Add(this.lblProtocol);
@@ -205,11 +252,16 @@ namespace OpcMock
         private System.Windows.Forms.DataGridViewTextBoxColumn TagValue;
         private System.Windows.Forms.DataGridViewComboBoxColumn TagQualityText;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagQualityValue;
-        private System.Windows.Forms.SaveFileDialog fdDataFile;
+        private System.Windows.Forms.SaveFileDialog sfdDataFile;
         private System.Windows.Forms.Button btnDataFileDialog;
         private System.Windows.Forms.Label lblProtocol;
         private System.Windows.Forms.Button btnStep;
         private System.Windows.Forms.RichTextBox rtbProtocol;
+        private System.Windows.Forms.Label lblProjectFilePath;
+        private System.Windows.Forms.TextBox tbProjectFilePath;
+        private System.Windows.Forms.SaveFileDialog sfdProjectFile;
+        private System.Windows.Forms.Button btnProjectFileDialog;
+        private System.Windows.Forms.Button btnSaveProjectFile;
     }
 }
 

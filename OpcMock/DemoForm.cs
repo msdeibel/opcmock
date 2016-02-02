@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using OpcMock.Properties;
 
 namespace OpcMock
 {
     public partial class DemoForm : Form
     {
+        private const string FILE_EXTENSION_PROTOCOL = ".protocol";
+        private const string FILE_EXTENSION_PROJECT = ".omp";
+        private const string FILE_EXTENSION_DATA = ".csv";
+
         private string dataFilePath;
+        private string projectFilePath;
+        private string protocolFilePath;
 
         private OpcReader opcReader;
         private OpcWriter opcWriter;
@@ -37,20 +41,23 @@ namespace OpcMock
         {
             dataFilePath = string.Empty;
 
-            fdDataFile.Filter = @"OPC Mock Data|*.csv";
+            sfdDataFile.Filter = @"OPC Mock Data|*" + FILE_EXTENSION_DATA;
+            sfdProjectFile.Filter = @"OPC Mock Project|*" + FILE_EXTENSION_PROJECT;
 
             currentProtocolLine = 0;
         }
 
         private void btnDataFileDialog_Click(object sender, EventArgs e)
         {
-            if (DialogResult.OK.Equals(fdDataFile.ShowDialog(this)))
+            if (DialogResult.OK.Equals(sfdDataFile.ShowDialog(this)))
             {
-                dataFilePath = fdDataFile.FileName;
+                dataFilePath = sfdDataFile.FileName;
                 if (!File.Exists(dataFilePath))
                 {
                     File.Create(dataFilePath).Close();
                 }
+
+                tbDataFileName.Text = dataFilePath;
 
                 opcReader = new OpcReaderCsv(dataFilePath);
                 opcWriter = new OpcWriterCsv(dataFilePath);
@@ -162,8 +169,6 @@ namespace OpcMock
             }
         }
 
-
-
         private void SetSingleTagFromProtocol(ProtocolLine protocolLine)
         {
             OpcTag.OpcTagQuality qualityFromInt =
@@ -195,6 +200,27 @@ namespace OpcMock
         {
             currentProtocolLine++;
             btnStep.Text = "Execute step " + (currentProtocolLine + 1);
+        }
+
+        private void btnSaveDataFile_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.OK.Equals(sfdProjectFile.ShowDialog(this)))
+            {
+                projectFilePath = sfdProjectFile.FileName;
+                if (!File.Exists(projectFilePath))
+                {
+                    File.Create(projectFilePath).Close();
+                }
+
+                tbProjectFilePath.Text = projectFilePath;
+                protocolFilePath = projectFilePath.Replace(FILE_EXTENSION_PROJECT, FILE_EXTENSION_PROTOCOL);
+            }
+        }
+
+        private void btnSaveProjectFile_Click(object sender, EventArgs e)
+        {
+            File.WriteAllLines(protocolFilePath, rtbProtocol.Lines);
+            File.AppendAllLines(projectFilePath, new string[] {dataFilePath, protocolFilePath});
         }
     }
 }
