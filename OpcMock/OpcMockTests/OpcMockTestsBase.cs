@@ -7,6 +7,7 @@ namespace OpcMock.Tests
     {
         protected TestContext testContext;
         protected string dataFilePath;
+        protected string projectFilePath;
 
         public TestContext TestContext
         {
@@ -27,6 +28,14 @@ namespace OpcMock.Tests
             if (File.Exists(dataFilePath))
             {
                 File.Delete(dataFilePath);
+            }
+        }
+
+        protected void DeleteProjectFileIfExists()
+        {
+            if (File.Exists(projectFilePath))
+            {
+                File.Delete(projectFilePath);
             }
         }
     }
