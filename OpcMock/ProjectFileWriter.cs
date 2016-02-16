@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Xml;
 
 namespace OpcMock
 {
@@ -31,29 +33,44 @@ namespace OpcMock
 
         public void SaveProjectFileContent()
         {
-            string content =   "<project>" + Environment.NewLine
-                             + "    <project_name>" + projectName + "</project_name>" + Environment.NewLine
-                             + "    <project_data_file>" + projectName + OpcMockConstants.FileExtensionData + "</project_data_file>" + Environment.NewLine;
+            StringBuilder stringBuilder = new StringBuilder();
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "    ";
+            settings.OmitXmlDeclaration = true;
+
+            XmlWriter xmlWriter = XmlWriter.Create(stringBuilder, settings);
+
+            xmlWriter.WriteStartDocument(true);
+
+            xmlWriter.WriteStartElement("project");
+
+            xmlWriter.WriteElementString("project_name", projectName);
+            xmlWriter.WriteElementString("project_data_file", projectName + OpcMockConstants.FileExtensionData);
 
             if (0 == protocolNames.Count)
             {
-                content += "    <protocol_list/>" + Environment.NewLine;
+                xmlWriter.WriteElementString("protocol_list", string.Empty);
             }
             else
             {
-                content += "    <protocol_list>" + Environment.NewLine;
+                xmlWriter.WriteStartElement("protocol_list");
 
                 foreach (string protocolName in protocolNames)
                 {
-                    content += "        <protocol>" + protocolName + "</protocol>" + Environment.NewLine;
+                    xmlWriter.WriteElementString("protocol", protocolName);
                 }
 
-                content += "    </protocol_list>" + Environment.NewLine;
+                xmlWriter.WriteEndElement();
             }
-            
-            content += "</project>";
 
-            this.content = content;
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteEndDocument();
+
+            xmlWriter.Flush();
+
+            content = stringBuilder.ToString();
 
             SaveProjectFile();
         }
