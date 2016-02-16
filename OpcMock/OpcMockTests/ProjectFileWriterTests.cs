@@ -56,19 +56,24 @@ namespace OpcMockTests
             DeleteProjectFileIfExists();
         }
 
+        void SaveContentToFileAndCheckResult(string expectedFileContentStart)
+        {
+
+            projectFileWriter.SaveProjectFileContent();
+
+            string actualFileContent = File.ReadAllText(projectFilePath).Substring(0, expectedFileContentStart.Length);
+
+            Assert.AreEqual(expectedFileContentStart, actualFileContent);
+        }
+
         [TestMethod]
         public void Create_Project_File_Contains_Name_Segment()
         {
             string expectedFileContentStart = "<project>" + Environment.NewLine
                                          + "    <project_name>" + PROJECT_NAME + "</project_name>" 
                                          + Environment.NewLine;
-                                        
 
-            projectFileWriter.SaveProjectFileContent();
-
-            string actualFileContent = File.ReadAllText(projectFilePath);
-
-            Assert.IsTrue(actualFileContent.StartsWith(expectedFileContentStart));
+            SaveContentToFileAndCheckResult(expectedFileContentStart);
         }
 
         [TestMethod]
@@ -80,11 +85,7 @@ namespace OpcMockTests
                                               + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
                                               + Environment.NewLine;
 
-            projectFileWriter.SaveProjectFileContent();
-
-            string actualFileContent = File.ReadAllText(projectFilePath);
-
-            Assert.IsTrue(actualFileContent.StartsWith(expectedFileContentStart));
+            SaveContentToFileAndCheckResult(expectedFileContentStart);
         }
 
         [TestMethod]
@@ -105,11 +106,7 @@ namespace OpcMockTests
                                               + "    <protocol_list />"
                                               + Environment.NewLine;
 
-            projectFileWriter.SaveProjectFileContent();
-
-            string actualFileContent = File.ReadAllText(projectFilePath);
-
-            Assert.IsTrue(actualFileContent.StartsWith(expectedFileContentStart));
+            SaveContentToFileAndCheckResult(expectedFileContentStart);
         }
 
         [TestMethod]
@@ -147,11 +144,7 @@ namespace OpcMockTests
 
             projectFileWriter.AddProtocolName("firstProtocol");
 
-            projectFileWriter.SaveProjectFileContent();
-
-            string actualFileContent = File.ReadAllText(projectFilePath);
-
-            Assert.IsTrue(actualFileContent.StartsWith(expectedFileContentStart));
+            SaveContentToFileAndCheckResult(expectedFileContentStart);
         }
     }
 }
