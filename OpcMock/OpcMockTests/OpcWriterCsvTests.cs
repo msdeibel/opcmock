@@ -17,7 +17,7 @@ namespace OpcMock.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            dataFilePath = TestContext.TestDir + "\\testdatafile" + FileExtensionContants.FileExtensionData;
+            dataFilePath = TestContext.TestDir + "\\testdatafile.csv";
         }
 
         [TestMethod()]

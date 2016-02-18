@@ -17,7 +17,7 @@ namespace OpcMock.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            dataFilePath = TestContext.TestDir + "\\testdatafile" + FileExtensionContants.FileExtensionData;
+            dataFilePath = TestContext.TestDir + "\\testdatafile.csv";
             lockAcquistionRetries = 23;
         }
 
@@ -46,7 +46,7 @@ namespace OpcMock.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void Contructor_Throws_Exception_For_Wrong_File_Extension()
         {
-            dataFilePath = dataFilePath.Replace(FileExtensionContants.FileExtensionData, ".abc");
+            dataFilePath = dataFilePath.Replace(".csv", ".abc");
 
             DeleteDataFileIfExists();
 
