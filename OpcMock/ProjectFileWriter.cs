@@ -21,7 +21,7 @@ namespace OpcMock
             this.protocolNames = new List<string>();
         }
 
-        public ProjectFileWriter(string projectFilePath, string projectName) : this(projectFilePath)
+        public ProjectFileWriter(string projectFilePath, string projectName) : this(projectFilePath + Path.DirectorySeparatorChar + projectName + FileExtensionContants.FileExtensionProject)
         {
             this.projectName = projectName;
         }

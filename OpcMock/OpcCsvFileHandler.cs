@@ -7,9 +7,6 @@ namespace OpcMock
 {
     public class OpcCsvFileHandler
     {
-        private const string FILE_EXT_DATA = ".csv";
-        private const string FILE_EXT_LOCK = ".lck";
-
         protected const int LockAcquisitionRetryIntervallInMs = 500;
         protected const int LockAcquisitionDefaultMaxRetries = 5;
 
@@ -33,7 +30,7 @@ namespace OpcMock
             CheckDataFileExistence(dataFilePath);
 
             DataFilePath = dataFilePath;
-            LockFilePath = dataFilePath.Replace(FILE_EXT_DATA, FILE_EXT_LOCK);
+            LockFilePath = dataFilePath.Replace(FileExtensionContants.FileExtensionData, FileExtensionContants.FileExtensionLock);
             MaxLockAcquisitionRetries = LockAcquisitionDefaultMaxRetries;
         }
 
@@ -47,9 +44,9 @@ namespace OpcMock
 
         private void CheckDataFilenameExtension(string dataFilePath)
         {
-            if (!dataFilePath.EndsWith(FILE_EXT_DATA))
+            if (!dataFilePath.EndsWith(FileExtensionContants.FileExtensionData))
             {
-                throw new ArgumentException("Data filename must have extension '.csv'", paramName: dataFilePath);
+                throw new ArgumentException("Data filename must have extension '" + FileExtensionContants.FileExtensionData + "'", paramName: dataFilePath);
             }
         }
 
