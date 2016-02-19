@@ -9,9 +9,7 @@ namespace OpcMock
 {
     public partial class DemoForm : Form
     {
-        private const string FILE_EXTENSION_PROTOCOL = ".protocol";
-        private const string FILE_EXTENSION_PROJECT = ".omp";
-        private const string FILE_EXTENSION_DATA = ".csv";
+        
 
         private string dataFilePath;
         private string projectFilePath;
@@ -41,8 +39,8 @@ namespace OpcMock
         {
             dataFilePath = string.Empty;
 
-            sfdDataFile.Filter = @"OPC Mock Data|*" + FILE_EXTENSION_DATA;
-            sfdProjectFile.Filter = @"OPC Mock Project|*" + FILE_EXTENSION_PROJECT;
+            sfdDataFile.Filter = @"OPC Mock Data|*" + FileExtensionContants.FileExtensionData;
+            sfdProjectFile.Filter = @"OPC Mock Project|*" + FileExtensionContants.FileExtensionProject;
 
             currentProtocolLine = 0;
         }
@@ -202,25 +200,41 @@ namespace OpcMock
             btnStep.Text = "Execute step " + (currentProtocolLine + 1);
         }
 
-        private void btnSaveDataFile_Click(object sender, EventArgs e)
+        private void btnSaveProjectFile_Click(object sender, EventArgs e)
         {
-            if (DialogResult.OK.Equals(sfdProjectFile.ShowDialog(this)))
-            {
-                projectFilePath = sfdProjectFile.FileName;
-                if (!File.Exists(projectFilePath))
-                {
-                    File.Create(projectFilePath).Close();
-                }
+            ProjectFileWriter pfw = new ProjectFileWriter(tbProjectFilePath.Text, tbProjectName.Text);
 
-                tbProjectFilePath.Text = projectFilePath;
-                protocolFilePath = projectFilePath.Replace(FILE_EXTENSION_PROJECT, FILE_EXTENSION_PROTOCOL);
+            pfw.SaveProjectFileContent();
+        }
+
+        private void btnFdbDialog_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = fbdProjectPath.ShowDialog();
+
+            if (dialogResult.Equals(DialogResult.OK))
+            {
+                tbProjectFilePath.Text = fbdProjectPath.SelectedPath;
             }
         }
 
-        private void btnSaveProjectFile_Click(object sender, EventArgs e)
+        private void btnCreateProject_Click(object sender, EventArgs e)
         {
-            File.WriteAllLines(protocolFilePath, rtbProtocol.Lines);
-            File.AppendAllLines(projectFilePath, new string[] {dataFilePath, protocolFilePath});
+            ProjectFileWriter pfw = new ProjectFileWriter(tbProjectFilePath.Text, tbProjectName.Text);
+            pfw.SaveProjectFileContent();
+
+            dataFilePath = tbProjectFilePath.Text + Path.DirectorySeparatorChar + tbProjectName.Text + FileExtensionContants.FileExtensionData;
+            if (!File.Exists(dataFilePath))
+            {
+                File.Create(dataFilePath).Close();
+            }
+
+            tbDataFileName.Text = dataFilePath;
+
+            opcReader = new OpcReaderCsv(dataFilePath);
+            opcWriter = new OpcWriterCsv(dataFilePath);
+
+            EnableButtonsAfterDataFileLoad();
+
         }
     }
 }
