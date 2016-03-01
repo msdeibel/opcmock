@@ -55,6 +55,8 @@ namespace OpcMockTests
         {
             OpcTag ot1 = new OpcTag("ot1", "value1");
             OpcTag ot2 = new OpcTag("ot2", "value1");
+
+            Assert.IsTrue(ot1 != ot2);
         }
     }
 }
