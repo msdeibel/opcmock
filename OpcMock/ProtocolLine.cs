@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,6 +73,27 @@ namespace OpcMock
 
         public string TagQualityInt => tagQualityInt;
 
-        
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            return obj is ProtocolLine && this == (ProtocolLine)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return MD5.Create(tagPath + tagValue + tagQualityInt).GetHashCode();
+        }
+
+        public static bool operator ==(ProtocolLine protocolLine1, ProtocolLine protocolLine2)
+        {
+            return protocolLine1.tagPath == protocolLine2.tagPath
+                    && protocolLine1.tagValue == protocolLine2.tagValue
+                    && protocolLine1.tagQualityInt == protocolLine2.tagQualityInt;
+        }
+
+        public static bool operator !=(ProtocolLine protocolLine1, ProtocolLine protocolLine2)
+        {
+            return !(protocolLine1 == protocolLine2);
+        }
     }
 }

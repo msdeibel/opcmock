@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="FileExtensionContants.cs" />
     <Compile Include="OpcMockConstants.cs" />
+    <Compile Include="OpcMockProtocol.cs" />
     <Compile Include="ProjectFileWriter.cs" />
     <Compile Include="ProtocolActionException.cs" />
     <Compile Include="GlobalSuppressions.cs" />
