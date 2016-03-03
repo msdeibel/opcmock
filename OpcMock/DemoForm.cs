@@ -55,8 +55,6 @@ namespace OpcMock
                     File.Create(dataFilePath).Close();
                 }
 
-                tbDataFileName.Text = dataFilePath;
-
                 opcReader = new OpcReaderCsv(dataFilePath);
                 opcWriter = new OpcWriterCsv(dataFilePath);
 
@@ -140,6 +138,14 @@ namespace OpcMock
             string lineToExecute = rtbProtocol.Lines[currentProtocolLine];
 
             ExecuteProtocolLine(lineToExecute);
+
+            IncrementCurrentProtocolLine();
+
+        }
+
+        private static bool IsEndOfProtocol(string lineToExecute)
+        {
+            return string.IsNullOrWhiteSpace(lineToExecute);
         }
 
         private void ExecuteProtocolLine(string lineToExecute) 
@@ -158,7 +164,7 @@ namespace OpcMock
                 }
                 else if (protocolLine.Action.Equals(ProtocolLine.Actions.Dummy))
                 {
-                    IncrementCurrentProtocolLine();
+                    //Do nothing
                 }
             }
             catch (ProtocolActionException exProtocol)
@@ -170,12 +176,10 @@ namespace OpcMock
         private void SetSingleTagFromProtocol(ProtocolLine protocolLine)
         {
             OpcTag.OpcTagQuality qualityFromInt =
-                (OpcTag.OpcTagQuality) Convert.ToInt32(protocolLine.TagQualityInt);
+                (OpcTag.OpcTagQuality)Convert.ToInt32(protocolLine.TagQualityInt);
             opcWriter.WriteSingleTag(new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt));
 
             FillOpcDataGrid(opcReader.ReadAllTags());
-
-            IncrementCurrentProtocolLine();
         }
 
         private void CheckExpectedTagFromProtocol(ProtocolLine protocolLine)
@@ -189,15 +193,23 @@ namespace OpcMock
             if (opcTagList.Contains(tagToCheck))
             {
                 FillOpcDataGrid(opcTagList);
-
-                IncrementCurrentProtocolLine();
             }
         }
 
         private void IncrementCurrentProtocolLine()
         {
             currentProtocolLine++;
-            btnStep.Text = "Execute step " + (currentProtocolLine + 1);
+
+            if (IsEndOfProtocol(rtbProtocol.Lines[currentProtocolLine]))
+            {
+                btnStep.Text = "Done";
+                btnStep.Enabled = false;
+                btnResetProtocol.Enabled = true;
+            }
+            else
+            {
+                btnStep.Text = "Execute step " + (currentProtocolLine + 1);
+            }
         }
 
         private void btnSaveProjectFile_Click(object sender, EventArgs e)
@@ -228,13 +240,20 @@ namespace OpcMock
                 File.Create(dataFilePath).Close();
             }
 
-            tbDataFileName.Text = dataFilePath;
-
             opcReader = new OpcReaderCsv(dataFilePath);
             opcWriter = new OpcWriterCsv(dataFilePath);
 
             EnableButtonsAfterDataFileLoad();
 
+        }
+
+        private void btnResetProtocol_Click(object sender, EventArgs e)
+        {
+            currentProtocolLine = -1;
+            btnResetProtocol.Enabled = false;
+
+            IncrementCurrentProtocolLine();
+            btnStep.Enabled = true;
         }
     }
 }

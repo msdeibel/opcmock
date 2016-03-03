@@ -36,8 +36,6 @@ namespace OpcMock
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagQualityText = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.TagQualityValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tbDataFileName = new System.Windows.Forms.TextBox();
-            this.lblDataFileName = new System.Windows.Forms.Label();
             this.btnSaveData = new System.Windows.Forms.Button();
             this.btnReadOpcData = new System.Windows.Forms.Button();
             this.sfdDataFile = new System.Windows.Forms.SaveFileDialog();
@@ -54,6 +52,7 @@ namespace OpcMock
             this.btnFdbDialog = new System.Windows.Forms.Button();
             this.gbProjectInformation = new System.Windows.Forms.GroupBox();
             this.btnCreateProject = new System.Windows.Forms.Button();
+            this.btnResetProtocol = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.gbProjectInformation.SuspendLayout();
             this.SuspendLayout();
@@ -98,23 +97,6 @@ namespace OpcMock
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
             this.TagQualityValue.ReadOnly = true;
-            // 
-            // tbDataFileName
-            // 
-            this.tbDataFileName.Location = new System.Drawing.Point(10, 128);
-            this.tbDataFileName.Name = "tbDataFileName";
-            this.tbDataFileName.Size = new System.Drawing.Size(528, 20);
-            this.tbDataFileName.TabIndex = 1;
-            this.tbDataFileName.Text = "d:\\temp\\opctest";
-            // 
-            // lblDataFileName
-            // 
-            this.lblDataFileName.AutoSize = true;
-            this.lblDataFileName.Location = new System.Drawing.Point(8, 112);
-            this.lblDataFileName.Name = "lblDataFileName";
-            this.lblDataFileName.Size = new System.Drawing.Size(67, 13);
-            this.lblDataFileName.TabIndex = 2;
-            this.lblDataFileName.Text = "Datafile path";
             // 
             // btnSaveData
             // 
@@ -228,12 +210,10 @@ namespace OpcMock
             this.gbProjectInformation.Controls.Add(this.btnFdbDialog);
             this.gbProjectInformation.Controls.Add(this.lblProjectName);
             this.gbProjectInformation.Controls.Add(this.tbProjectFilePath);
-            this.gbProjectInformation.Controls.Add(this.tbDataFileName);
-            this.gbProjectInformation.Controls.Add(this.lblDataFileName);
             this.gbProjectInformation.Controls.Add(this.lblProjectPath);
             this.gbProjectInformation.Location = new System.Drawing.Point(12, 12);
             this.gbProjectInformation.Name = "gbProjectInformation";
-            this.gbProjectInformation.Size = new System.Drawing.Size(884, 168);
+            this.gbProjectInformation.Size = new System.Drawing.Size(884, 122);
             this.gbProjectInformation.TabIndex = 21;
             this.gbProjectInformation.TabStop = false;
             this.gbProjectInformation.Text = "Project information";
@@ -248,11 +228,23 @@ namespace OpcMock
             this.btnCreateProject.UseVisualStyleBackColor = true;
             this.btnCreateProject.Click += new System.EventHandler(this.btnCreateProject_Click);
             // 
+            // btnResetProtocol
+            // 
+            this.btnResetProtocol.Enabled = false;
+            this.btnResetProtocol.Location = new System.Drawing.Point(763, 429);
+            this.btnResetProtocol.Name = "btnResetProtocol";
+            this.btnResetProtocol.Size = new System.Drawing.Size(127, 31);
+            this.btnResetProtocol.TabIndex = 22;
+            this.btnResetProtocol.Text = "Reset protocol";
+            this.btnResetProtocol.UseVisualStyleBackColor = true;
+            this.btnResetProtocol.Click += new System.EventHandler(this.btnResetProtocol_Click);
+            // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(908, 505);
+            this.Controls.Add(this.btnResetProtocol);
             this.Controls.Add(this.gbProjectInformation);
             this.Controls.Add(this.rtbProtocol);
             this.Controls.Add(this.btnStep);
@@ -278,8 +270,6 @@ namespace OpcMock
         #endregion
 
         private System.Windows.Forms.DataGridView dgvOpcData;
-        private System.Windows.Forms.TextBox tbDataFileName;
-        private System.Windows.Forms.Label lblDataFileName;
         private System.Windows.Forms.Button btnSaveData;
         private System.Windows.Forms.Button btnReadOpcData;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagName;
@@ -300,6 +290,7 @@ namespace OpcMock
         private System.Windows.Forms.Button btnFdbDialog;
         private System.Windows.Forms.GroupBox gbProjectInformation;
         private System.Windows.Forms.Button btnCreateProject;
+        private System.Windows.Forms.Button btnResetProtocol;
     }
 }
 
