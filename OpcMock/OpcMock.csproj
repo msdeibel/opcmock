@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="FileExtensionContants.cs" />
     <Compile Include="OpcMockConstants.cs" />
+    <Compile Include="OpcMockProject.cs" />
     <Compile Include="OpcMockProtocol.cs" />
     <Compile Include="ProjectFileWriter.cs" />
     <Compile Include="ProtocolActionException.cs" />
@@ -89,6 +90,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Properties\DataSources\OpcTag.datasource" />
+    <None Include="Properties\DataSources\OpcTag.OpcTagQuality.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

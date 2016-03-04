@@ -53,6 +53,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="OpcCsvFileHandlerTests.cs" />
+    <Compile Include="OpcMockProject.cs" />
+    <Compile Include="OpcMockProjectTests.cs" />
     <Compile Include="OpcMockProtocol.cs" />
     <Compile Include="OpcMockTestsBase.cs" />
     <Compile Include="OpcReaderCsvTests.cs" />

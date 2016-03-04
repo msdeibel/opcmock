@@ -29,16 +29,10 @@ namespace OpcMock
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvOpcData = new System.Windows.Forms.DataGridView();
-            this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TagQualityText = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.TagQualityValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnSaveData = new System.Windows.Forms.Button();
             this.btnReadOpcData = new System.Windows.Forms.Button();
-            this.sfdDataFile = new System.Windows.Forms.SaveFileDialog();
             this.lblProtocol = new System.Windows.Forms.Label();
             this.btnStep = new System.Windows.Forms.Button();
             this.rtbProtocol = new System.Windows.Forms.RichTextBox();
@@ -53,6 +47,10 @@ namespace OpcMock
             this.gbProjectInformation = new System.Windows.Forms.GroupBox();
             this.btnCreateProject = new System.Windows.Forms.Button();
             this.btnResetProtocol = new System.Windows.Forms.Button();
+            this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TagQualityText = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.TagQualityValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.gbProjectInformation.SuspendLayout();
             this.SuspendLayout();
@@ -70,33 +68,6 @@ namespace OpcMock
             this.dgvOpcData.Name = "dgvOpcData";
             this.dgvOpcData.Size = new System.Drawing.Size(560, 210);
             this.dgvOpcData.TabIndex = 0;
-            // 
-            // TagName
-            // 
-            this.TagName.HeaderText = "TagName";
-            this.TagName.Name = "TagName";
-            // 
-            // TagValue
-            // 
-            this.TagValue.HeaderText = "TagValue";
-            this.TagValue.Name = "TagValue";
-            // 
-            // TagQualityText
-            // 
-            dataGridViewCellStyle3.NullValue = "Good";
-            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle3;
-            this.TagQualityText.HeaderText = "TagQualityText";
-            this.TagQualityText.Name = "TagQualityText";
-            this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.TagQualityText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // TagQualityValue
-            // 
-            dataGridViewCellStyle4.NullValue = "192";
-            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle4;
-            this.TagQualityValue.HeaderText = "TagQualityValue";
-            this.TagQualityValue.Name = "TagQualityValue";
-            this.TagQualityValue.ReadOnly = true;
             // 
             // btnSaveData
             // 
@@ -239,6 +210,30 @@ namespace OpcMock
             this.btnResetProtocol.UseVisualStyleBackColor = true;
             this.btnResetProtocol.Click += new System.EventHandler(this.btnResetProtocol_Click);
             // 
+            // TagName
+            // 
+            this.TagName.HeaderText = "TagName";
+            this.TagName.Name = "TagName";
+            // 
+            // TagValue
+            // 
+            this.TagValue.HeaderText = "TagValue";
+            this.TagValue.Name = "TagValue";
+            // 
+            // TagQualityText
+            // 
+            dataGridViewCellStyle2.NullValue = "Good";
+            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle2;
+            this.TagQualityText.HeaderText = "TagQualityText";
+            this.TagQualityText.Name = "TagQualityText";
+            this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.TagQualityText.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // TagQualityValue
+            // 
+            this.TagQualityValue.HeaderText = "TagQualityValue";
+            this.TagQualityValue.Name = "TagQualityValue";
+            // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -272,11 +267,6 @@ namespace OpcMock
         private System.Windows.Forms.DataGridView dgvOpcData;
         private System.Windows.Forms.Button btnSaveData;
         private System.Windows.Forms.Button btnReadOpcData;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TagName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TagValue;
-        private System.Windows.Forms.DataGridViewComboBoxColumn TagQualityText;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TagQualityValue;
-        private System.Windows.Forms.SaveFileDialog sfdDataFile;
         private System.Windows.Forms.Label lblProtocol;
         private System.Windows.Forms.Button btnStep;
         private System.Windows.Forms.RichTextBox rtbProtocol;
@@ -291,6 +281,10 @@ namespace OpcMock
         private System.Windows.Forms.GroupBox gbProjectInformation;
         private System.Windows.Forms.Button btnCreateProject;
         private System.Windows.Forms.Button btnResetProtocol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TagName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TagValue;
+        private System.Windows.Forms.DataGridViewComboBoxColumn TagQualityText;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TagQualityValue;
     }
 }
 

@@ -14,6 +14,8 @@ namespace OpcMock
         private string dataFilePath;
         private string projectFilePath;
         private string protocolFilePath;
+        private OpcMockProject opcMockProject;
+        private ProjectFileWriter projectFileWriter;
 
         private OpcReader opcReader;
         private OpcWriter opcWriter;
@@ -39,27 +41,9 @@ namespace OpcMock
         {
             dataFilePath = string.Empty;
 
-            sfdDataFile.Filter = @"OPC Mock Data|*" + FileExtensionContants.FileExtensionData;
             sfdProjectFile.Filter = @"OPC Mock Project|*" + FileExtensionContants.FileExtensionProject;
 
             currentProtocolLine = 0;
-        }
-
-        private void btnDataFileDialog_Click(object sender, EventArgs e)
-        {
-            if (DialogResult.OK.Equals(sfdDataFile.ShowDialog(this)))
-            {
-                dataFilePath = sfdDataFile.FileName;
-                if (!File.Exists(dataFilePath))
-                {
-                    File.Create(dataFilePath).Close();
-                }
-
-                opcReader = new OpcReaderCsv(dataFilePath);
-                opcWriter = new OpcWriterCsv(dataFilePath);
-
-                EnableButtonsAfterDataFileLoad();
-            }
         }
 
         private void btnReadOpcData_Click(object sender, EventArgs e)
@@ -167,7 +151,7 @@ namespace OpcMock
                     //Do nothing
                 }
             }
-            catch (ProtocolActionException exProtocol)
+            catch (ProtocolActionException)
             {
                 MessageBox.Show("Invalid protocol action for line: " + lineToExecute);
             }
@@ -214,9 +198,7 @@ namespace OpcMock
 
         private void btnSaveProjectFile_Click(object sender, EventArgs e)
         {
-            ProjectFileWriter pfw = new ProjectFileWriter(tbProjectFilePath.Text, tbProjectName.Text);
-
-            pfw.SaveProjectFileContent();
+            projectFileWriter.SaveProjectFileContent();
         }
 
         private void btnFdbDialog_Click(object sender, EventArgs e)
@@ -231,10 +213,15 @@ namespace OpcMock
 
         private void btnCreateProject_Click(object sender, EventArgs e)
         {
-            ProjectFileWriter pfw = new ProjectFileWriter(tbProjectFilePath.Text, tbProjectName.Text);
-            pfw.SaveProjectFileContent();
+            if (string.IsNullOrWhiteSpace(tbProjectName.Text)) { return; }
 
-            dataFilePath = tbProjectFilePath.Text + Path.DirectorySeparatorChar + tbProjectName.Text + FileExtensionContants.FileExtensionData;
+            opcMockProject = new OpcMockProject(tbProjectName.Text);
+
+            projectFileWriter = new ProjectFileWriter(tbProjectFilePath.Text, opcMockProject.Name);
+            projectFileWriter.SaveProjectFileContent();
+
+            dataFilePath = projectFileWriter.FolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + FileExtensionContants.FileExtensionData;
+
             if (!File.Exists(dataFilePath))
             {
                 File.Create(dataFilePath).Close();
@@ -244,7 +231,6 @@ namespace OpcMock
             opcWriter = new OpcWriterCsv(dataFilePath);
 
             EnableButtonsAfterDataFileLoad();
-
         }
 
         private void btnResetProtocol_Click(object sender, EventArgs e)
