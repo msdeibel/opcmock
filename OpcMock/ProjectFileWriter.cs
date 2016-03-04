@@ -98,6 +98,11 @@ namespace OpcMock
             }
         }
 
+        public string FolderPath
+        {
+            get { return Path.GetDirectoryName(projectFilePath); }
+        }
+
         ///TODO: Add wrapper methods for ProtocolNames; at least Add and Remove
     }
 }

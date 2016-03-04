@@ -13,7 +13,6 @@ namespace OpcMockTests
     public class ProjectFileWriterTests : OpcMockTestsBase
     {
         private string PROJECT_NAME = "testName";
-        
 
         private ProjectFileWriter projectFileWriter;
 
@@ -135,6 +134,13 @@ namespace OpcMockTests
             projectFileWriter.AddProtocolName("firstProtocol");
 
             SaveContentToFileAndCheckResult(expectedFileContentStart);
+        }
+
+        [TestMethod]
+        public void Project_Folder_Returns_Path_Without_Trailing_Backslash()
+        {
+            Assert.AreEqual(TestContext.TestDir, projectFileWriter.FolderPath);
+            Assert.IsFalse(TestContext.TestDir.EndsWith("\\"));
         }
 
         void SaveContentToFileAndCheckResult(string expectedFileContentStart)
