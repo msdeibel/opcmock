@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateProjectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateProjectDialog.Designer.cs">
+      <DependentUpon>CreateProjectDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileExtensionContants.cs" />
     <Compile Include="OpcMockConstants.cs" />
     <Compile Include="OpcMockProject.cs" />
@@ -77,6 +83,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolLine.cs" />
+    <EmbeddedResource Include="CreateProjectDialog.resx">
+      <DependentUpon>CreateProjectDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DemoForm.resx">
       <DependentUpon>DemoForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -201,36 +201,9 @@ namespace OpcMock
             projectFileWriter.SaveProjectFileContent();
         }
 
-        private void btnFdbDialog_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = fbdProjectPath.ShowDialog();
-
-            if (dialogResult.Equals(DialogResult.OK))
-            {
-                tbProjectFilePath.Text = fbdProjectPath.SelectedPath;
-            }
-        }
-
         private void btnCreateProject_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(tbProjectName.Text)) { return; }
-
-            opcMockProject = new OpcMockProject(tbProjectName.Text);
-
-            projectFileWriter = new ProjectFileWriter(tbProjectFilePath.Text, opcMockProject.Name);
-            projectFileWriter.SaveProjectFileContent();
-
-            dataFilePath = projectFileWriter.FolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + FileExtensionContants.FileExtensionData;
-
-            if (!File.Exists(dataFilePath))
-            {
-                File.Create(dataFilePath).Close();
-            }
-
-            opcReader = new OpcReaderCsv(dataFilePath);
-            opcWriter = new OpcWriterCsv(dataFilePath);
-
-            EnableButtonsAfterDataFileLoad();
+            
         }
 
         private void btnResetProtocol_Click(object sender, EventArgs e)
@@ -240,6 +213,43 @@ namespace OpcMock
 
             IncrementCurrentProtocolLine();
             btnStep.Enabled = true;
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateProjectDialog cpd = new CreateProjectDialog();
+            cpd.StartPosition = FormStartPosition.CenterParent;
+
+            if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
+            {
+                projectFileWriter = new ProjectFileWriter(cpd.ProjectFolderPath, cpd.Project.Name);
+                opcMockProject = cpd.Project;
+                projectFileWriter.SaveProjectFileContent();
+                dataFilePath = CreateDataFilePath();
+
+                if (!File.Exists(dataFilePath))
+                {
+                    File.Create(dataFilePath).Close();
+                }
+
+                opcReader = new OpcReaderCsv(dataFilePath);
+                opcWriter = new OpcWriterCsv(dataFilePath);
+
+                this.Text = "OPC Mock - " + opcMockProject.Name;
+                EnableButtonsAfterDataFileLoad();
+            }
+
+            cpd.Dispose();
+        }
+
+        private string CreateDataFilePath()
+        {
+             return projectFileWriter.FolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + FileExtensionContants.FileExtensionData;
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
