@@ -68,13 +68,21 @@ namespace OpcMockTests
         [TestMethod]
         public void Save_Project_File_Contains_ProjectDataFile_Segment()
         {
-            string expectedFileContentStart = "<project>" + Environment.NewLine
+            DeleteProjectFileIfExists();
+
+            string projectFileContent = "<project>" + Environment.NewLine
                                               + "    <project_name>" + PROJECT_NAME + "</project_name>" 
                                               + Environment.NewLine
                                               + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
-                                              + Environment.NewLine;
+                                              + Environment.NewLine
+                                              + "</project>";
 
-            SaveContentToFileAndCheckResult(expectedFileContentStart);
+            File.WriteAllText(projectFilePath, projectFileContent);
+
+
+
+
+            DeleteProjectFileIfExists();
         }
 
         [TestMethod]

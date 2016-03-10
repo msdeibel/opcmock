@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace OpcMock.Tests
+namespace OpcMockTests
 {
     public class OpcMockTestsBase
     {

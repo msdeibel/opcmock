@@ -60,6 +60,7 @@
     <Compile Include="OpcMockConstants.cs" />
     <Compile Include="OpcMockProject.cs" />
     <Compile Include="OpcMockProtocol.cs" />
+    <Compile Include="ProjectFileReader.cs" />
     <Compile Include="ProjectFileWriter.cs" />
     <Compile Include="ProtocolActionException.cs" />
     <Compile Include="GlobalSuppressions.cs" />

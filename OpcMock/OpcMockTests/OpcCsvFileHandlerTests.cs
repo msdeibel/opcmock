@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpcMock.Tests
+namespace OpcMockTests
 {
     [TestClass()]
     public class OpcCsvFileHandlerTests : OpcMockTestsBase

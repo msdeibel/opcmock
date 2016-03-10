@@ -196,16 +196,6 @@ namespace OpcMock
             }
         }
 
-        private void btnSaveProjectFile_Click(object sender, EventArgs e)
-        {
-            projectFileWriter.SaveProjectFileContent();
-        }
-
-        private void btnCreateProject_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void btnResetProtocol_Click(object sender, EventArgs e)
         {
             currentProtocolLine = -1;
@@ -250,6 +240,11 @@ namespace OpcMock
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            projectFileWriter.SaveProjectFileContent();
         }
     }
 }
