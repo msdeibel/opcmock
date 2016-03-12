@@ -36,8 +36,8 @@ namespace OpcMock
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagQualityText = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.TagQualityValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnSaveData = new System.Windows.Forms.Button();
-            this.btnReadOpcData = new System.Windows.Forms.Button();
+            this.btnSaveTags = new System.Windows.Forms.Button();
+            this.btnReadTags = new System.Windows.Forms.Button();
             this.lblProtocol = new System.Windows.Forms.Label();
             this.btnStep = new System.Windows.Forms.Button();
             this.rtbProtocol = new System.Windows.Forms.RichTextBox();
@@ -46,10 +46,12 @@ namespace OpcMock
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ofdProjectFile = new System.Windows.Forms.OpenFileDialog();
+            this.lblTags = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,27 +94,27 @@ namespace OpcMock
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
             // 
-            // btnSaveData
+            // btnSaveTags
             // 
-            this.btnSaveData.Enabled = false;
-            this.btnSaveData.Location = new System.Drawing.Point(12, 309);
-            this.btnSaveData.Name = "btnSaveData";
-            this.btnSaveData.Size = new System.Drawing.Size(75, 31);
-            this.btnSaveData.TabIndex = 4;
-            this.btnSaveData.Text = "Save data";
-            this.btnSaveData.UseVisualStyleBackColor = true;
-            this.btnSaveData.Click += new System.EventHandler(this.btnSaveData_Click);
+            this.btnSaveTags.Enabled = false;
+            this.btnSaveTags.Location = new System.Drawing.Point(12, 309);
+            this.btnSaveTags.Name = "btnSaveTags";
+            this.btnSaveTags.Size = new System.Drawing.Size(75, 31);
+            this.btnSaveTags.TabIndex = 1;
+            this.btnSaveTags.Text = "Save tags";
+            this.btnSaveTags.UseVisualStyleBackColor = true;
+            this.btnSaveTags.Click += new System.EventHandler(this.btnSaveData_Click);
             // 
-            // btnReadOpcData
+            // btnReadTags
             // 
-            this.btnReadOpcData.Enabled = false;
-            this.btnReadOpcData.Location = new System.Drawing.Point(93, 309);
-            this.btnReadOpcData.Name = "btnReadOpcData";
-            this.btnReadOpcData.Size = new System.Drawing.Size(75, 31);
-            this.btnReadOpcData.TabIndex = 5;
-            this.btnReadOpcData.Text = "Read data";
-            this.btnReadOpcData.UseVisualStyleBackColor = true;
-            this.btnReadOpcData.Click += new System.EventHandler(this.btnReadOpcData_Click);
+            this.btnReadTags.Enabled = false;
+            this.btnReadTags.Location = new System.Drawing.Point(93, 309);
+            this.btnReadTags.Name = "btnReadTags";
+            this.btnReadTags.Size = new System.Drawing.Size(75, 31);
+            this.btnReadTags.TabIndex = 2;
+            this.btnReadTags.Text = "Read tags";
+            this.btnReadTags.UseVisualStyleBackColor = true;
+            this.btnReadTags.Click += new System.EventHandler(this.btnReadOpcData_Click);
             // 
             // lblProtocol
             // 
@@ -129,7 +131,7 @@ namespace OpcMock
             this.btnStep.Location = new System.Drawing.Point(603, 309);
             this.btnStep.Name = "btnStep";
             this.btnStep.Size = new System.Drawing.Size(127, 31);
-            this.btnStep.TabIndex = 12;
+            this.btnStep.TabIndex = 4;
             this.btnStep.Text = "Execute step 1";
             this.btnStep.UseVisualStyleBackColor = true;
             this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
@@ -139,7 +141,7 @@ namespace OpcMock
             this.rtbProtocol.Location = new System.Drawing.Point(603, 89);
             this.rtbProtocol.Name = "rtbProtocol";
             this.rtbProtocol.Size = new System.Drawing.Size(287, 210);
-            this.rtbProtocol.TabIndex = 13;
+            this.rtbProtocol.TabIndex = 3;
             this.rtbProtocol.Text = "Set;tagToSet;newValue;192\nDummy\nWait;tagToWaitFor;expectedValue;192\n";
             // 
             // btnResetProtocol
@@ -148,7 +150,7 @@ namespace OpcMock
             this.btnResetProtocol.Location = new System.Drawing.Point(763, 309);
             this.btnResetProtocol.Name = "btnResetProtocol";
             this.btnResetProtocol.Size = new System.Drawing.Size(127, 31);
-            this.btnResetProtocol.TabIndex = 22;
+            this.btnResetProtocol.TabIndex = 5;
             this.btnResetProtocol.Text = "Reset protocol";
             this.btnResetProtocol.UseVisualStyleBackColor = true;
             this.btnResetProtocol.Click += new System.EventHandler(this.btnResetProtocol_Click);
@@ -179,49 +181,64 @@ namespace OpcMock
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // ofdProjectFile
+            // 
+            this.ofdProjectFile.Filter = "OpcMock Project|*.project";
+            // 
+            // lblTags
+            // 
+            this.lblTags.AutoSize = true;
+            this.lblTags.Location = new System.Drawing.Point(12, 73);
+            this.lblTags.Name = "lblTags";
+            this.lblTags.Size = new System.Drawing.Size(31, 13);
+            this.lblTags.TabIndex = 24;
+            this.lblTags.Text = "Tags";
             // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(908, 445);
+            this.Controls.Add(this.lblTags);
             this.Controls.Add(this.btnResetProtocol);
             this.Controls.Add(this.rtbProtocol);
             this.Controls.Add(this.btnStep);
             this.Controls.Add(this.lblProtocol);
-            this.Controls.Add(this.btnReadOpcData);
-            this.Controls.Add(this.btnSaveData);
+            this.Controls.Add(this.btnReadTags);
+            this.Controls.Add(this.btnSaveTags);
             this.Controls.Add(this.dgvOpcData);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -244,8 +261,8 @@ namespace OpcMock
         #endregion
 
         private System.Windows.Forms.DataGridView dgvOpcData;
-        private System.Windows.Forms.Button btnSaveData;
-        private System.Windows.Forms.Button btnReadOpcData;
+        private System.Windows.Forms.Button btnSaveTags;
+        private System.Windows.Forms.Button btnReadTags;
         private System.Windows.Forms.Label lblProtocol;
         private System.Windows.Forms.Button btnStep;
         private System.Windows.Forms.RichTextBox rtbProtocol;
@@ -262,6 +279,8 @@ namespace OpcMock
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog ofdProjectFile;
+        private System.Windows.Forms.Label lblTags;
     }
 }
 
