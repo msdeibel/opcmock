@@ -50,6 +50,8 @@ namespace OpcMock
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.protocolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdProjectFile = new System.Windows.Forms.OpenFileDialog();
             this.lblTags = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
@@ -158,7 +160,8 @@ namespace OpcMock
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.protocolToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(908, 24);
@@ -213,6 +216,21 @@ namespace OpcMock
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // protocolToolStripMenuItem
+            // 
+            this.protocolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem1});
+            this.protocolToolStripMenuItem.Name = "protocolToolStripMenuItem";
+            this.protocolToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.protocolToolStripMenuItem.Text = "Protocol";
+            // 
+            // newToolStripMenuItem1
+            // 
+            this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
+            this.newToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem1.Text = "New";
+            this.newToolStripMenuItem1.Click += new System.EventHandler(this.newToolStripMenuItem1_Click);
             // 
             // ofdProjectFile
             // 
@@ -281,6 +299,8 @@ namespace OpcMock
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog ofdProjectFile;
         private System.Windows.Forms.Label lblTags;
+        private System.Windows.Forms.ToolStripMenuItem protocolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem1;
     }
 }
 

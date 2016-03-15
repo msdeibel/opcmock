@@ -56,6 +56,13 @@
     <Compile Include="CreateProjectDialog.Designer.cs">
       <DependentUpon>CreateProjectDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreateProtocolDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateProtocolDialog.Designer.cs">
+      <DependentUpon>CreateProtocolDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DuplicateProtocolNameException.cs" />
     <Compile Include="FileExtensionContants.cs" />
     <Compile Include="OpcMockConstants.cs" />
     <Compile Include="OpcMockProject.cs" />
@@ -86,6 +93,9 @@
     <Compile Include="ProtocolLine.cs" />
     <EmbeddedResource Include="CreateProjectDialog.resx">
       <DependentUpon>CreateProjectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateProtocolDialog.resx">
+      <DependentUpon>CreateProtocolDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DemoForm.resx">
       <DependentUpon>DemoForm.cs</DependentUpon>

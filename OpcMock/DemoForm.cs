@@ -294,5 +294,25 @@ namespace OpcMock
         {
             return Path.GetDirectoryName(projectFilePath);
         }
+
+        private void newToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CreateProtocolDialog cpd = new CreateProtocolDialog();
+            cpd.StartPosition = FormStartPosition.CenterParent;
+
+            if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
+            {
+                try
+                {
+                    opcMockProject.AddProtocol(cpd.OpcMockProtocol);
+                }
+                catch (DuplicateProtocolNameException exProtocolName)
+                {
+                    MessageBox.Show(this, exProtocolName.Message + "\n" + exProtocolName.ProtocolName);
+                }
+            }
+
+            cpd.Dispose();
+        }
     }
 }

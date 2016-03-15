@@ -5,10 +5,12 @@ namespace OpcMock
 {
     public class OpcMockProtocol
     {
+        public string Name { get; internal set; }
         private List<ProtocolLine> lines;
 
-        public OpcMockProtocol()
+        public OpcMockProtocol(string newProtocolName)
         {
+            Name = newProtocolName;
             lines = new List<ProtocolLine>();
         }
 
