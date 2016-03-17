@@ -13,7 +13,6 @@ namespace OpcMock
 
         private string dataFilePath;
         private string projectFilePath;
-        private string protocolFilePath;
         private OpcMockProject opcMockProject;
         private ProjectFileWriter projectFileWriter;
 
@@ -224,9 +223,12 @@ namespace OpcMock
 
             if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
             {
-                projectFileWriter = new ProjectFileWriter(cpd.ProjectFolderPath, cpd.Project.Name);
                 opcMockProject = cpd.Project;
-                projectFileWriter.SaveProjectFileContent();
+
+                projectFileWriter = new ProjectFileWriter(opcMockProject, cpd.ProjectFolderPath);
+
+                projectFileWriter.Save();
+
                 dataFilePath = CreateDataFilePath();
 
                 if (!File.Exists(dataFilePath))
@@ -237,7 +239,7 @@ namespace OpcMock
                 opcReader = new OpcReaderCsv(dataFilePath);
                 opcWriter = new OpcWriterCsv(dataFilePath);
 
-                this.Text = "OPC Mock - " + opcMockProject.Name;
+                Text = "OPC Mock - " + opcMockProject.Name;
                 EnableButtonsAfterDataFileLoad();
             }
 
@@ -249,14 +251,14 @@ namespace OpcMock
             if (DialogResult.OK.Equals(ofdProjectFile.ShowDialog(this)))
             {
                 projectFilePath = ofdProjectFile.FileName;
-                
+
                 ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
                 opcMockProject = pfr.OpcMockProject;
 
                 dataFilePath = projectFilePath.Replace(OpcMockConstants.FileExtensionProject, OpcMockConstants.FileExtensionData);
 
-                projectFileWriter = new ProjectFileWriter(Path.GetDirectoryName(projectFilePath), pfr.OpcMockProject.Name);
+                projectFileWriter = new ProjectFileWriter(pfr.OpcMockProject, Path.GetDirectoryName(projectFilePath));
 
                 if (!File.Exists(dataFilePath))
                 {
@@ -268,14 +270,14 @@ namespace OpcMock
 
                 FillOpcDataGrid(opcReader.ReadAllTags());
 
-                this.Text = "OPC Mock - " + opcMockProject.Name;
+                Text = "OPC Mock - " + opcMockProject.Name;
                 EnableButtonsAfterDataFileLoad();
             }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            projectFileWriter.SaveProjectFileContent();
+            projectFileWriter.Save();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -308,7 +310,7 @@ namespace OpcMock
                 }
                 catch (DuplicateProtocolNameException exProtocolName)
                 {
-                    MessageBox.Show(this, exProtocolName.Message + "\n" + exProtocolName.ProtocolName);
+                    MessageBox.Show(this, exProtocolName.Message + "\n" + exProtocolName.ProtocolName, "Protocol exists", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

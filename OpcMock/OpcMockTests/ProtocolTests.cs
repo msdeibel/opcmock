@@ -43,7 +43,7 @@ namespace OpcMockTests
         [TestMethod]
         public void Equality_Operator_Works_Based_On_Protocol_Name()
         {
-            Assert.AreEqual(false, true);
+            Assert.IsTrue(new OpcMockProtocol(PROTOCOL_NAME).Equals(new OpcMockProtocol(PROTOCOL_NAME)));
         }
     }
 }

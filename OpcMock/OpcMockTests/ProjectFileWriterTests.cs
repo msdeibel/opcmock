@@ -27,7 +27,8 @@ namespace OpcMockTests
         public void TestInitialize()
         {
             projectFilePath = TestContext.TestDir + Path.DirectorySeparatorChar + PROJECT_NAME + OpcMockConstants.FileExtensionProject;
-            projectFileWriter = new ProjectFileWriter(projectFilePath);
+
+            projectFileWriter = new ProjectFileWriter(new OpcMockProject(PROJECT_NAME), TestContext.TestDir);
         }
 
         [TestMethod]
@@ -35,7 +36,7 @@ namespace OpcMockTests
         {
             DeleteProjectFileIfExists();
 
-            projectFileWriter.SaveProjectFileContent();
+            projectFileWriter.Save();
 
             Assert.IsTrue(File.Exists(projectFilePath));
 
@@ -47,10 +48,10 @@ namespace OpcMockTests
         {
             DeleteProjectFileIfExists();
 
-            projectFileWriter.SaveProjectFileContent();
+            projectFileWriter.Save();
 
-            Assert.AreEqual(PROJECT_NAME, Path.GetFileNameWithoutExtension(projectFileWriter.ProjectFilePath));
-            Assert.AreEqual(OpcMockConstants.FileExtensionProject, Path.GetExtension(projectFileWriter.ProjectFilePath));
+            Assert.AreEqual(PROJECT_NAME, Path.GetFileNameWithoutExtension(projectFileWriter.FilePath));
+            Assert.AreEqual(OpcMockConstants.FileExtensionProject, Path.GetExtension(projectFileWriter.FilePath));
 
             DeleteProjectFileIfExists();
         }
@@ -86,14 +87,6 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Constructor_Sets_Project_Name()
-        {
-            projectFileWriter = new ProjectFileWriter(projectFilePath, PROJECT_NAME);
-
-            Assert.AreEqual(PROJECT_NAME, projectFileWriter.ProjectName);
-        }
-
-        [TestMethod]
         public void Save_Project_File_Contains_Empty_ProtocolList_Segment()
         {
             string expectedFileContentStart = "<project>" + Environment.NewLine
@@ -107,27 +100,13 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Add_ProtocolName_Adds_Item_At_The_End_Of_The_List()
-        {
-            projectFileWriter.AddProtocolName("firstProtocol");
-            projectFileWriter.AddProtocolName("secondProtocol");
-
-            Assert.AreEqual("firstProtocol", projectFileWriter.ProtocolNames[0]);
-            Assert.AreEqual("secondProtocol", projectFileWriter.ProtocolNames[1]);
-        }
-
-        [TestMethod]
-        public void Same_Protocol_Name_Cannot_Be_Added_More_Than_Once()
-        {
-            projectFileWriter.AddProtocolName("firstProtocol");
-            projectFileWriter.AddProtocolName("firstProtocol");
-
-            Assert.AreEqual(1, projectFileWriter.ProtocolNames.Count);
-        }
-
-        [TestMethod]
         public void Save_Project_File_Contains_ProtocolList_With_One_Protocol()
         {
+            OpcMockProject projectWithOneProtocol = new OpcMockProject(PROJECT_NAME);
+            projectWithOneProtocol.AddProtocol(new OpcMockProtocol("firstProtocol"));
+
+            projectFileWriter = new ProjectFileWriter(projectWithOneProtocol, TestContext.TestDir);
+
             string expectedFileContentStart =   "<project>" + Environment.NewLine
                                               + "    <project_name>" + PROJECT_NAME + "</project_name>" + Environment.NewLine
                                               + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
@@ -138,8 +117,6 @@ namespace OpcMockTests
                                               + Environment.NewLine
                                               + "    </protocol_list>"
                                               + Environment.NewLine;
-
-            projectFileWriter.AddProtocolName("firstProtocol");
 
             SaveContentToFileAndCheckResult(expectedFileContentStart);
         }
@@ -153,7 +130,7 @@ namespace OpcMockTests
 
         void SaveContentToFileAndCheckResult(string expectedFileContentStart)
         {
-            projectFileWriter.SaveProjectFileContent();
+            projectFileWriter.Save();
 
             string actualFileContent = File.ReadAllText(projectFilePath).Substring(0, expectedFileContentStart.Length);
 

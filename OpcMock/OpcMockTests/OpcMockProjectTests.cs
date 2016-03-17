@@ -42,7 +42,7 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(OpcMock.DuplicateProtocolNameException))]
+        [ExpectedException(typeof(DuplicateProtocolNameException))]
         public void Adding_Duplicate_Protocol_Name_Throws_Exception()
         {
             OpcMockProtocol protocolToAdd = new OpcMockProtocol(PROTOCOL_NAME);

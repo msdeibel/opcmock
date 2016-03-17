@@ -8,30 +8,23 @@ namespace OpcMock
 {
     public class ProjectFileWriter
     {
-        private string projectFilePath;
+        private OpcMockProject opcMockProject;
+        private string projectFolderPath;
         private string content;
-        private string projectName;
-        private List<String> protocolNames; 
 
-        public ProjectFileWriter(string projectFilePath)
+        public ProjectFileWriter(OpcMockProject opcMockProject, string projectFolderPath)
         {
-            this.projectFilePath = projectFilePath;
+            this.projectFolderPath = projectFolderPath;
+            this.opcMockProject = opcMockProject;
             this.content = string.Empty;
-            this.projectName = Path.GetFileNameWithoutExtension(projectFilePath);
-            this.protocolNames = new List<string>();
         }
 
-        public ProjectFileWriter(string projectFilePath, string projectName) : this(projectFilePath + Path.DirectorySeparatorChar + projectName + FileExtensionContants.FileExtensionProject)
+        private string GetProjectFilePath()
         {
-            this.projectName = projectName;
+            return projectFolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + OpcMockConstants.FileExtensionProject;
         }
 
-        private void SaveProjectFile()
-        {
-            File.WriteAllText(projectFilePath, content);
-        }
-
-        public void SaveProjectFileContent()
+        public void Save()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -46,10 +39,10 @@ namespace OpcMock
 
             xmlWriter.WriteStartElement("project");
 
-            xmlWriter.WriteElementString("project_name", projectName);
-            xmlWriter.WriteElementString("project_data_file", projectName + OpcMockConstants.FileExtensionData);
+            xmlWriter.WriteElementString("project_name", opcMockProject.Name);
+            xmlWriter.WriteElementString("project_data_file", opcMockProject.Name + OpcMockConstants.FileExtensionData);
 
-            if (0 == protocolNames.Count)
+            if (0 == opcMockProject.Protocols.Count)
             {
                 xmlWriter.WriteElementString("protocol_list", string.Empty);
             }
@@ -57,12 +50,12 @@ namespace OpcMock
             {
                 xmlWriter.WriteStartElement("protocol_list");
 
-                foreach (string protocolName in protocolNames)
+                foreach (OpcMockProtocol omp in opcMockProject.Protocols)
                 {
-                    xmlWriter.WriteElementString("protocol", protocolName);
+                    xmlWriter.WriteElementString("protocol", omp.Name);
                 }
 
-                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndElement();M
             }
 
             xmlWriter.WriteEndElement();
@@ -72,35 +65,17 @@ namespace OpcMock
 
             content = stringBuilder.ToString();
 
-            SaveProjectFile();
+            File.WriteAllText(GetProjectFilePath(), content);
         }
 
-        public string ProjectFilePath
+        public string FilePath
         {
-            get { return projectFilePath; }
-        }
-
-        public string ProjectName
-        {
-            get { return projectName; }
-        }
-
-        public List<string> ProtocolNames
-        {
-            get { return protocolNames; }
-        }
-
-        public void AddProtocolName(string newProtocolName)
-        {
-            if (!protocolNames.Contains(newProtocolName))
-            {
-                protocolNames.Add(newProtocolName);
-            }
+            get { return GetProjectFilePath(); }
         }
 
         public string FolderPath
         {
-            get { return Path.GetDirectoryName(projectFilePath); }
+            get { return projectFolderPath; }
         }
 
         ///TODO: Add wrapper methods for ProtocolNames; at least Add and Remove
