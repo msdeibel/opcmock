@@ -26,34 +26,34 @@ namespace OpcMockTests
         [TestInitialize]
         public void TestInitialize()
         {
+            DeleteProjectFileIfExists();
+
             projectFilePath = TestContext.TestDir + Path.DirectorySeparatorChar + PROJECT_NAME + OpcMockConstants.FileExtensionProject;
 
             projectFileWriter = new ProjectFileWriter(new OpcMockProject(PROJECT_NAME), TestContext.TestDir);
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            DeleteProjectFileIfExists();
+        }
+
         [TestMethod]
         public void Create_Project_File_In_Project_Path()
         {
-            DeleteProjectFileIfExists();
-
             projectFileWriter.Save();
 
             Assert.IsTrue(File.Exists(projectFilePath));
-
-            DeleteProjectFileIfExists();
         }
 
         [TestMethod]
         public void Create_Project_File_With_Correct_Name_And_Extension()
         {
-            DeleteProjectFileIfExists();
-
             projectFileWriter.Save();
 
             Assert.AreEqual(PROJECT_NAME, Path.GetFileNameWithoutExtension(projectFileWriter.FilePath));
             Assert.AreEqual(OpcMockConstants.FileExtensionProject, Path.GetExtension(projectFileWriter.FilePath));
-
-            DeleteProjectFileIfExists();
         }
 
         [TestMethod]
@@ -67,31 +67,10 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Save_Project_File_Contains_ProjectDataFile_Segment()
-        {
-            DeleteProjectFileIfExists();
-
-            string projectFileContent = "<project>" + Environment.NewLine
-                                              + "    <project_name>" + PROJECT_NAME + "</project_name>" 
-                                              + Environment.NewLine
-                                              + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
-                                              + Environment.NewLine
-                                              + "</project>";
-
-            File.WriteAllText(projectFilePath, projectFileContent);
-
-
-
-
-            DeleteProjectFileIfExists();
-        }
-
-        [TestMethod]
         public void Save_Project_File_Contains_Empty_ProtocolList_Segment()
         {
             string expectedFileContentStart = "<project>" + Environment.NewLine
-                                              + "    <project_name>" + PROJECT_NAME + "</project_name>" + Environment.NewLine
-                                              + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
+                                              + "    <project_name>" + PROJECT_NAME + "</project_name>" 
                                               + Environment.NewLine
                                               + "    <protocol_list />"
                                               + Environment.NewLine;
@@ -109,8 +88,6 @@ namespace OpcMockTests
 
             string expectedFileContentStart =   "<project>" + Environment.NewLine
                                               + "    <project_name>" + PROJECT_NAME + "</project_name>" + Environment.NewLine
-                                              + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
-                                              + Environment.NewLine
                                               + "    <protocol_list>"
                                               + Environment.NewLine
                                               + "        <protocol>firstProtocol</protocol>"

@@ -11,8 +11,9 @@ namespace OpcMock
     {
         
 
-        private string dataFilePath;
+        //private string dataFilePath;
         private string projectFilePath;
+        private string projectFolderPath;
         private OpcMockProject opcMockProject;
         private ProjectFileWriter projectFileWriter;
 
@@ -38,8 +39,6 @@ namespace OpcMock
 
         private void InitializeMembers()
         {
-            dataFilePath = string.Empty;
-
             sfdProjectFile.Filter = @"OPC Mock Project|*" + FileExtensionContants.FileExtensionProject;
 
             currentProtocolLine = 0;
@@ -47,7 +46,7 @@ namespace OpcMock
 
         private void btnReadOpcData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(dataFilePath)) return;
+            if (string.IsNullOrWhiteSpace(DataFilePath())) return;
 
             FillOpcDataGrid(opcReader.ReadAllTags());
         }
@@ -79,7 +78,7 @@ namespace OpcMock
 
         private void btnSaveData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(dataFilePath))
+            if (string.IsNullOrEmpty(DataFilePath()))
             {
                 MessageBox.Show(Resources.DemoForm_btnSaveData_Click_Set_target_file_tagPath_);
                 
@@ -123,7 +122,7 @@ namespace OpcMock
 
         private void btnStep_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(dataFilePath)) return;
+            if (string.IsNullOrWhiteSpace(DataFilePath())) return;
 
             ExecuteProtocolLine();
         }
@@ -224,20 +223,19 @@ namespace OpcMock
             if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
             {
                 opcMockProject = cpd.Project;
+                projectFolderPath = cpd.ProjectFolderPath;
 
-                projectFileWriter = new ProjectFileWriter(opcMockProject, cpd.ProjectFolderPath);
+                projectFileWriter = new ProjectFileWriter(opcMockProject, projectFolderPath);
 
                 projectFileWriter.Save();
 
-                dataFilePath = CreateDataFilePath();
-
-                if (!File.Exists(dataFilePath))
+                if (!File.Exists(DataFilePath()))
                 {
-                    File.Create(dataFilePath).Close();
+                    File.Create(DataFilePath()).Close();
                 }
 
-                opcReader = new OpcReaderCsv(dataFilePath);
-                opcWriter = new OpcWriterCsv(dataFilePath);
+                opcReader = new OpcReaderCsv(DataFilePath());
+                opcWriter = new OpcWriterCsv(DataFilePath());
 
                 Text = "OPC Mock - " + opcMockProject.Name;
                 EnableButtonsAfterDataFileLoad();
@@ -251,22 +249,21 @@ namespace OpcMock
             if (DialogResult.OK.Equals(ofdProjectFile.ShowDialog(this)))
             {
                 projectFilePath = ofdProjectFile.FileName;
+                projectFolderPath = Path.GetDirectoryName(projectFilePath);
 
                 ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
                 opcMockProject = pfr.OpcMockProject;
 
-                dataFilePath = projectFilePath.Replace(OpcMockConstants.FileExtensionProject, OpcMockConstants.FileExtensionData);
+                projectFileWriter = new ProjectFileWriter(opcMockProject, projectFolderPath);
 
-                projectFileWriter = new ProjectFileWriter(pfr.OpcMockProject, Path.GetDirectoryName(projectFilePath));
-
-                if (!File.Exists(dataFilePath))
+                if (!File.Exists(DataFilePath()))
                 {
-                    File.Create(dataFilePath).Close();
+                    File.Create(DataFilePath()).Close();
                 }
 
-                opcReader = new OpcReaderCsv(dataFilePath);
-                opcWriter = new OpcWriterCsv(dataFilePath);
+                opcReader = new OpcReaderCsv(DataFilePath());
+                opcWriter = new OpcWriterCsv(DataFilePath());
 
                 FillOpcDataGrid(opcReader.ReadAllTags());
 
@@ -287,9 +284,9 @@ namespace OpcMock
 
         #endregion
 
-        private string CreateDataFilePath()
+        private string DataFilePath()
         {
-            return projectFileWriter.FolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + FileExtensionContants.FileExtensionData;
+            return projectFolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + FileExtensionContants.FileExtensionData;
         }
 
         private string GetProjectFolderPath()

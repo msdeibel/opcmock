@@ -40,7 +40,6 @@ namespace OpcMock
             xmlWriter.WriteStartElement("project");
 
             xmlWriter.WriteElementString("project_name", opcMockProject.Name);
-            xmlWriter.WriteElementString("project_data_file", opcMockProject.Name + OpcMockConstants.FileExtensionData);
 
             if (0 == opcMockProject.Protocols.Count)
             {
@@ -55,7 +54,7 @@ namespace OpcMock
                     xmlWriter.WriteElementString("protocol", omp.Name);
                 }
 
-                xmlWriter.WriteEndElement();M
+                xmlWriter.WriteEndElement();
             }
 
             xmlWriter.WriteEndElement();

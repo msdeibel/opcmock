@@ -20,8 +20,6 @@ namespace OpcMockTests
             projectFileContent = "<project>" + Environment.NewLine
                                     + "    <project_name>" + PROJECT_NAME + "</project_name>"
                                     + Environment.NewLine
-                                    + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
-                                    + Environment.NewLine
                                     + "</project>";
 
             File.WriteAllText(projectFilePath, projectFileContent);
@@ -42,8 +40,6 @@ namespace OpcMockTests
 
             projectFileContent = "<project>" + Environment.NewLine
                                     + "    <project_name>" + PROJECT_NAME + "</project_name>"
-                                    + Environment.NewLine
-                                    + "    <project_data_file>" + PROJECT_NAME + OpcMockConstants.FileExtensionData + "</project_data_file>"
                                     + Environment.NewLine
                                     + "</project>";
 
