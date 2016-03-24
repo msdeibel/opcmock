@@ -114,5 +114,13 @@ namespace OpcMock.Tests
 
             Assert.IsTrue(pl1 != pl2);
         }
+
+        [TestMethod]
+        public void ToString_Without_Parameter_Produces_Semicolon_Separated_String()
+        {
+            ProtocolLine protocolLine = new ProtocolLine("Set;tagPath;tagValue;192");
+
+            Assert.AreEqual("Set;tagPath;tagValue;192", protocolLine.ToString());
+        }
     }
 }

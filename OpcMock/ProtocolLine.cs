@@ -95,5 +95,10 @@ namespace OpcMock
         {
             return !(protocolLine1 == protocolLine2);
         }
+
+        public override string ToString()
+        {
+            return action.ToString() + ';' + TagPath + ';' + TagValue + ';' + TagQualityInt;
+        }
     }
 }
