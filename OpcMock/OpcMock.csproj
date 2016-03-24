@@ -91,6 +91,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolLine.cs" />
+    <Compile Include="ProtocolWriter.cs" />
     <EmbeddedResource Include="CreateProjectDialog.resx">
       <DependentUpon>CreateProjectDialog.cs</DependentUpon>
     </EmbeddedResource>
