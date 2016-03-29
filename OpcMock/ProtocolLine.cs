@@ -22,6 +22,7 @@ namespace OpcMock
         /// 
         /// </summary>
         /// <param name="protocolLine">Format: "Set;tagPath;tagValue;192"</param>
+        /// <exception cref="ArgumentException">In case protocolLine IsNullOrWhiteSpace</exception>
         public ProtocolLine(string protocolLine)
         {
             if (string.IsNullOrWhiteSpace(protocolLine))

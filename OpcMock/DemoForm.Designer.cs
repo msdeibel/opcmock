@@ -54,6 +54,9 @@ namespace OpcMock
             this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdProjectFile = new System.Windows.Forms.OpenFileDialog();
             this.lblTags = new System.Windows.Forms.Label();
+            this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cbProtocols = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -130,7 +133,7 @@ namespace OpcMock
             // btnStep
             // 
             this.btnStep.Enabled = false;
-            this.btnStep.Location = new System.Drawing.Point(603, 309);
+            this.btnStep.Location = new System.Drawing.Point(603, 361);
             this.btnStep.Name = "btnStep";
             this.btnStep.Size = new System.Drawing.Size(127, 31);
             this.btnStep.TabIndex = 4;
@@ -140,7 +143,7 @@ namespace OpcMock
             // 
             // rtbProtocol
             // 
-            this.rtbProtocol.Location = new System.Drawing.Point(603, 89);
+            this.rtbProtocol.Location = new System.Drawing.Point(603, 145);
             this.rtbProtocol.Name = "rtbProtocol";
             this.rtbProtocol.Size = new System.Drawing.Size(287, 210);
             this.rtbProtocol.TabIndex = 3;
@@ -149,7 +152,7 @@ namespace OpcMock
             // btnResetProtocol
             // 
             this.btnResetProtocol.Enabled = false;
-            this.btnResetProtocol.Location = new System.Drawing.Point(763, 309);
+            this.btnResetProtocol.Location = new System.Drawing.Point(763, 361);
             this.btnResetProtocol.Name = "btnResetProtocol";
             this.btnResetProtocol.Size = new System.Drawing.Size(127, 31);
             this.btnResetProtocol.TabIndex = 5;
@@ -184,7 +187,7 @@ namespace OpcMock
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -192,7 +195,7 @@ namespace OpcMock
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -200,27 +203,29 @@ namespace OpcMock
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // protocolToolStripMenuItem
             // 
             this.protocolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem1});
+            this.newToolStripMenuItem1,
+            this.saveToolStripMenuItem1,
+            this.saveAllToolStripMenuItem});
             this.protocolToolStripMenuItem.Name = "protocolToolStripMenuItem";
             this.protocolToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.protocolToolStripMenuItem.Text = "Protocol";
@@ -245,11 +250,34 @@ namespace OpcMock
             this.lblTags.TabIndex = 24;
             this.lblTags.Text = "Tags";
             // 
+            // saveToolStripMenuItem1
+            // 
+            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem1.Text = "Save";
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // saveAllToolStripMenuItem
+            // 
+            this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAllToolStripMenuItem.Text = "Save all";
+            this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
+            // 
+            // cbProtocols
+            // 
+            this.cbProtocols.FormattingEnabled = true;
+            this.cbProtocols.Location = new System.Drawing.Point(603, 89);
+            this.cbProtocols.Name = "cbProtocols";
+            this.cbProtocols.Size = new System.Drawing.Size(287, 21);
+            this.cbProtocols.TabIndex = 25;
+            // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(908, 445);
+            this.Controls.Add(this.cbProtocols);
             this.Controls.Add(this.lblTags);
             this.Controls.Add(this.btnResetProtocol);
             this.Controls.Add(this.rtbProtocol);
@@ -301,6 +329,9 @@ namespace OpcMock
         private System.Windows.Forms.Label lblTags;
         private System.Windows.Forms.ToolStripMenuItem protocolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cbProtocols;
     }
 }
 

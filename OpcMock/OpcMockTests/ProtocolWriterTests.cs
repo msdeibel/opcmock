@@ -32,7 +32,7 @@ namespace OpcMockTests
 
             protocolWriter.Save(opcMockProtocol);
 
-            string protocolFilePath = TestContext.TestDeploymentDir + Path.DirectorySeparatorChar + projectName + FileExtensionContants.FileExtensionProtocol;
+            string protocolFilePath = TestContext.TestDeploymentDir + Path.DirectorySeparatorChar + protocolName + FileExtensionContants.FileExtensionProtocol;
 
             Assert.IsTrue(File.Exists(protocolFilePath));
 
@@ -51,7 +51,7 @@ namespace OpcMockTests
             omp.Append(new ProtocolLine(ompLine1));
             omp.Append(new ProtocolLine(ompLine2));
 
-            string protocolFilePath = TestContext.TestDeploymentDir + Path.DirectorySeparatorChar + projectName + FileExtensionContants.FileExtensionProtocol;
+            string protocolFilePath = TestContext.TestDeploymentDir + Path.DirectorySeparatorChar + protocolName + FileExtensionContants.FileExtensionProtocol;
 
             ProtocolWriter protocolWriter = new ProtocolWriter(TestContext.TestDeploymentDir, projectName);
 

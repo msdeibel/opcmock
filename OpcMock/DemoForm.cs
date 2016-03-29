@@ -304,6 +304,9 @@ namespace OpcMock
                 try
                 {
                     opcMockProject.AddProtocol(cpd.OpcMockProtocol);
+
+                    ///FIXME: Replace this call with an Event/EventListner combination
+                    UpdateProtocolComboBox();
                 }
                 catch (DuplicateProtocolNameException exProtocolName)
                 {
@@ -312,6 +315,52 @@ namespace OpcMock
             }
 
             cpd.Dispose();
+        }
+
+        private void UpdateProtocolComboBox()
+        {
+            cbProtocols.Items.Clear();
+
+            cbProtocols.Items.Add(string.Empty);
+            cbProtocols.SelectedIndex = 0;
+
+            ///FIXME: Overwrite OpcMockProtocol.ToString() to return the name
+            ///and replace the foreach
+            foreach (OpcMockProtocol omp in opcMockProject.Protocols)
+            {
+                cbProtocols.Items.Add(omp.Name);
+            }
+        }
+
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ProtocolWriter protocolWriter = new ProtocolWriter(GetProjectFolderPath(), opcMockProject.Name);
+
+            OpcMockProtocol currentProtocol = new OpcMockProtocol("Current");
+
+            foreach (string line in rtbProtocol.Lines)
+            {
+                try
+                {
+                    currentProtocol.Append(new ProtocolLine(line));
+                }
+                catch(ArgumentException)
+                {
+                    //End of protocol reached
+                }
+            }
+
+            protocolWriter.Save(currentProtocol);
+        }
+
+        private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProtocolWriter protocolWriter = new ProtocolWriter(GetProjectFolderPath(), opcMockProject.Name);
+
+            foreach (OpcMockProtocol omp in opcMockProject.Protocols)
+            {
+                protocolWriter.Save(omp);
+            }
         }
     }
 }

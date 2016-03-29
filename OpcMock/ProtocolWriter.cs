@@ -20,7 +20,7 @@ namespace OpcMock
 
         public void Save(OpcMockProtocol opcMockProtocol)
         {
-            string protocolFilePath = FolderPath + Path.DirectorySeparatorChar + ProjectName + FileExtensionContants.FileExtensionProtocol;
+            string protocolFilePath = FolderPath + Path.DirectorySeparatorChar + opcMockProtocol.Name + FileExtensionContants.FileExtensionProtocol;
 
             File.Create(protocolFilePath).Close();
 
