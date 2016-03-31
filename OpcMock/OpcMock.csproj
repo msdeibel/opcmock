@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProtocolAddedArgs.cs" />
     <Compile Include="CreateProjectDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +91,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolComparer.cs" />
     <Compile Include="ProtocolLine.cs" />
     <Compile Include="ProtocolWriter.cs" />
     <EmbeddedResource Include="CreateProjectDialog.resx">

@@ -50,5 +50,28 @@ namespace OpcMockTests
             opcMockProject.AddProtocol(protocolToAdd);
             opcMockProject.AddProtocol(protocolToAdd);
         }
+
+        [TestMethod]
+        public void Adding_Duplicate_Protocol_Does_Not_Raise_OnProtocoAdded()
+        {
+            bool eventRaised = false;
+
+            try
+            {
+                OpcMockProtocol protocolToAdd = new OpcMockProtocol(PROTOCOL_NAME);
+
+                opcMockProject.AddProtocol(protocolToAdd);
+
+                //Add the handler only after the first addition otherwise eventRaised
+                //is wrongly set to true
+                opcMockProject.OnProtocolAdded += delegate (ProtocolAddedArgs paArgs) { eventRaised = true; };
+
+                opcMockProject.AddProtocol(protocolToAdd);
+            }
+            catch (DuplicateProtocolNameException)
+            {
+                Assert.IsFalse(eventRaised);
+            }
+        }
     }
 }

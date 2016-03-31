@@ -14,6 +14,10 @@ namespace OpcMock
             Protocols = new List<OpcMockProtocol>();
         }
 
+        public delegate void ProtocolHandler(ProtocolAddedArgs protocolAddedArgs);
+
+        public event ProtocolHandler OnProtocolAdded;
+
         /// <summary>
         /// Add a protocol to the project
         /// </summary>
@@ -27,6 +31,11 @@ namespace OpcMock
             }
 
             Protocols.Add(protocolToAdd);
+
+            if (null != OnProtocolAdded)
+            {
+                OnProtocolAdded(new ProtocolAddedArgs(protocolToAdd));
+            }
         }
     }
 }

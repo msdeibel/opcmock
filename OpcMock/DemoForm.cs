@@ -223,6 +223,9 @@ namespace OpcMock
             if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
             {
                 opcMockProject = cpd.Project;
+
+                opcMockProject.OnProtocolAdded += new OpcMockProject.ProtocolHandler(opcMockProject_OnProtocolAdded);
+
                 projectFolderPath = cpd.ProjectFolderPath;
 
                 projectFileWriter = new ProjectFileWriter(opcMockProject, projectFolderPath);
@@ -254,6 +257,8 @@ namespace OpcMock
                 ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
                 opcMockProject = pfr.OpcMockProject;
+
+                opcMockProject.OnProtocolAdded += new OpcMockProject.ProtocolHandler(opcMockProject_OnProtocolAdded);
 
                 projectFileWriter = new ProjectFileWriter(opcMockProject, projectFolderPath);
 
@@ -304,9 +309,6 @@ namespace OpcMock
                 try
                 {
                     opcMockProject.AddProtocol(cpd.OpcMockProtocol);
-
-                    ///FIXME: Replace this call with an Event/EventListner combination
-                    UpdateProtocolComboBox();
                 }
                 catch (DuplicateProtocolNameException exProtocolName)
                 {
@@ -315,21 +317,6 @@ namespace OpcMock
             }
 
             cpd.Dispose();
-        }
-
-        private void UpdateProtocolComboBox()
-        {
-            cbProtocols.Items.Clear();
-
-            cbProtocols.Items.Add(string.Empty);
-            cbProtocols.SelectedIndex = 0;
-
-            ///FIXME: Overwrite OpcMockProtocol.ToString() to return the name
-            ///and replace the foreach
-            foreach (OpcMockProtocol omp in opcMockProject.Protocols)
-            {
-                cbProtocols.Items.Add(omp.Name);
-            }
         }
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -360,6 +347,28 @@ namespace OpcMock
             foreach (OpcMockProtocol omp in opcMockProject.Protocols)
             {
                 protocolWriter.Save(omp);
+            }
+        }
+
+        private void opcMockProject_OnProtocolAdded(ProtocolAddedArgs protocolAddedArgs)
+        {
+            UpdateProtocolComboBox();
+        }
+
+        private void UpdateProtocolComboBox()
+        {
+            cbProtocols.Items.Clear();
+
+            cbProtocols.Items.Add(string.Empty);
+            cbProtocols.SelectedIndex = 0;
+
+            opcMockProject.Protocols.Sort(new ProtocolComparer());
+
+            ///FIXME: Overwrite OpcMockProtocol.ToString() to return the name
+            ///and replace the foreach
+            foreach (OpcMockProtocol omp in opcMockProject.Protocols)
+            {
+                cbProtocols.Items.Add(omp.Name);
             }
         }
     }
