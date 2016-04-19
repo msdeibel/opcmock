@@ -321,23 +321,26 @@ namespace OpcMock
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ProtocolWriter protocolWriter = new ProtocolWriter(GetProjectFolderPath(), opcMockProject.Name);
-
-            OpcMockProtocol currentProtocol = new OpcMockProtocol("Current");
-
-            foreach (string line in rtbProtocol.Lines)
+            if (cbProtocols.SelectedIndex > 0)
             {
-                try
-                {
-                    currentProtocol.Append(new ProtocolLine(line));
-                }
-                catch(ArgumentException)
-                {
-                    //End of protocol reached
-                }
-            }
+                ProtocolWriter protocolWriter = new ProtocolWriter(GetProjectFolderPath(), opcMockProject.Name);
 
-            protocolWriter.Save(currentProtocol);
+                OpcMockProtocol currentProtocol = new OpcMockProtocol(cbProtocols.SelectedText);
+
+                foreach (string line in rtbProtocol.Lines)
+                {
+                    try
+                    {
+                        currentProtocol.Append(new ProtocolLine(line));
+                    }
+                    catch (ArgumentException)
+                    {
+                        //End of protocol reached
+                    }
+                }
+
+                protocolWriter.Save(currentProtocol);
+            }
         }
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -359,16 +362,34 @@ namespace OpcMock
         {
             cbProtocols.Items.Clear();
 
-            cbProtocols.Items.Add(string.Empty);
-            cbProtocols.SelectedIndex = 0;
-
             opcMockProject.Protocols.Sort(new ProtocolComparer());
 
-            ///FIXME: Overwrite OpcMockProtocol.ToString() to return the name
-            ///and replace the foreach
+            cbProtocols.Items.Add(string.Empty);
+
             foreach (OpcMockProtocol omp in opcMockProject.Protocols)
             {
-                cbProtocols.Items.Add(omp.Name);
+                cbProtocols.Items.Add(omp.ToString());
+            }
+
+            cbProtocols.SelectedIndex = 0;
+        }
+
+        private void cbProtocols_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbProtocols.SelectedIndex > 0)
+            {
+                foreach (OpcMockProtocol omp in opcMockProject.Protocols)
+                {
+                    if (omp.Name.Equals(cbProtocols.SelectedText))
+                    {
+                        rtbProtocol.Clear();
+
+                        foreach (ProtocolLine pl in omp.Lines)
+                        { 
+                            rtbProtocol.AppendText(pl.ToString());
+                        }
+                    }
+                }
             }
         }
     }

@@ -45,5 +45,23 @@ namespace OpcMockTests
         {
             Assert.IsTrue(new OpcMockProtocol(PROTOCOL_NAME).Equals(new OpcMockProtocol(PROTOCOL_NAME)));
         }
+
+        [TestMethod]
+        public void ToString_Return_Name()
+        {
+            OpcMockProtocol omp = new OpcMockProtocol(PROTOCOL_NAME);
+
+            Assert.AreEqual(PROTOCOL_NAME, omp.ToString());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Empty or spaces-only name should not be accepted")]
+        public void Empty_Or_SpacesOnly_Name_Raises_ArgumentException()
+        {
+            OpcMockProtocol omp = new OpcMockProtocol(string.Empty);
+            omp = new OpcMockProtocol("    ");
+            omp = new OpcMockProtocol("\t");
+
+        }
     }
 }
