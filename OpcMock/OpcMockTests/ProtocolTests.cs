@@ -63,5 +63,19 @@ namespace OpcMockTests
             omp = new OpcMockProtocol("\t");
 
         }
+
+        [TestMethod]
+        public void Adding_A_Line_Raises_LineAdded_Event()
+        {
+            bool eventRaised = false;
+
+            OpcMockProtocol protocol = new OpcMockProtocol(PROTOCOL_NAME);
+
+            protocol.OnProtocolLineAdded += delegate (ProtocolLineAddedArgs plaArgs) { eventRaised = true; };
+
+            protocol.Append(new ProtocolLine("Set;tagPath;tagValue;192"));
+
+            Assert.IsTrue(eventRaised);
+        }
     }
 }

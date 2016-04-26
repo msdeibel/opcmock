@@ -9,6 +9,10 @@ namespace OpcMock
         public string Name { get; internal set; }
         private List<ProtocolLine> lines;
 
+        public delegate void ProtocolLineAddedHandler(ProtocolLineAddedArgs plaArgs);
+
+        public event ProtocolLineAddedHandler OnProtocolLineAdded;
+
         public OpcMockProtocol(string newProtocolName)
         {
             if (string.IsNullOrWhiteSpace(newProtocolName))
@@ -28,6 +32,11 @@ namespace OpcMock
         public void Append(ProtocolLine protocolLine)
         {
             lines.Add(protocolLine);
+
+            if (null != OnProtocolLineAdded)
+            {
+                OnProtocolLineAdded(new ProtocolLineAddedArgs(protocolLine));
+            }
         }
 
         public override bool Equals(object obj)
