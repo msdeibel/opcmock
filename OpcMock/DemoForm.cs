@@ -134,23 +134,30 @@ namespace OpcMock
 
         private void ExecuteProtocolLine() 
         {
-            string lineToExecute = rtbProtocol.Lines[currentProtocolLine];
+            string lineToExecute = tbProtocol.Lines[currentProtocolLine];
 
             try
             {
                 ProtocolLine protocolLine = new ProtocolLine(lineToExecute);
 
-                if (protocolLine.Action.Equals(ProtocolLine.Actions.Set))
+                switch (protocolLine.Action)
                 {
-                    SetSingleTagFromProtocol(protocolLine);
-                }
-                else if (protocolLine.Action.Equals(ProtocolLine.Actions.Wait))
-                {
-                    CheckExpectedTagFromProtocol(protocolLine);
-                }
-                else if (protocolLine.Action.Equals(ProtocolLine.Actions.Dummy))
-                {
-                    IncrementCurrentProtocolLine();
+                    case ProtocolLine.Actions.Set:
+                        {
+                            SetSingleTagFromProtocol(protocolLine);
+                            break;
+                        }
+                    case ProtocolLine.Actions.Wait:
+                        {
+                            CheckExpectedTagFromProtocol(protocolLine);
+                            break;
+                        }
+                    case ProtocolLine.Actions.Dummy:
+                        {
+                            IncrementCurrentProtocolLine();
+                            break;
+                        }
+                    default: break;
                 }
             }
             catch (ProtocolActionException)
@@ -192,7 +199,7 @@ namespace OpcMock
         {
             currentProtocolLine++;
 
-            if (IsEndOfProtocol(rtbProtocol.Lines[currentProtocolLine]))
+            if (IsEndOfProtocol(tbProtocol.Lines[currentProtocolLine]))
             {
                 btnStep.Text = "Done";
                 btnStep.Enabled = false;
@@ -327,7 +334,7 @@ namespace OpcMock
 
                 OpcMockProtocol currentProtocol = new OpcMockProtocol(cbProtocols.SelectedText);
 
-                foreach (string line in rtbProtocol.Lines)
+                foreach (string line in tbProtocol.Lines)
                 {
                     try
                     {
@@ -382,11 +389,11 @@ namespace OpcMock
                 {
                     if (omp.Name.Equals(cbProtocols.SelectedText))
                     {
-                        rtbProtocol.Clear();
+                        tbProtocol.Clear();
 
                         foreach (ProtocolLine pl in omp.Lines)
                         { 
-                            rtbProtocol.AppendText(pl.ToString());
+                            tbProtocol.AppendText(pl.ToString());
                         }
                     }
                 }
