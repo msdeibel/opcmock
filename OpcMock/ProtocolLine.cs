@@ -23,6 +23,7 @@ namespace OpcMock
         /// </summary>
         /// <param name="protocolLine">Format: "Set;tagPath;tagValue;192"</param>
         /// <exception cref="ArgumentException">In case protocolLine IsNullOrWhiteSpace</exception>
+        /// <exception cref="ProtocolActionException">In case an unknown Action is passed in the protocolLine</exception>
         public ProtocolLine(string protocolLine)
         {
             if (string.IsNullOrWhiteSpace(protocolLine))
@@ -33,6 +34,11 @@ namespace OpcMock
             ParseProtocolLine(protocolLine);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="protocolLine"></param>
+        /// <exception cref="ProtocolActionException">In case an unknown Action is passed in the protocolLine</exception>
         private void ParseProtocolLine(string protocolLine)
         {
             string[] lineParts = new string[0];
@@ -49,11 +55,10 @@ namespace OpcMock
                 tagValue = lineParts[2].Trim();
                 tagQualityInt = lineParts[3].Trim();
             }
-            catch (ArgumentException exIa)
+            catch (ArgumentException exA)
             {
-                throw new ProtocolActionException("Illegal protocol action: " + lineParts[0], exIa);
+                throw new ProtocolActionException("Illegal protocol action: " + lineParts[0], exA);
             }
-
         }
 
         private static Actions ParseAction(string actionLinePart)

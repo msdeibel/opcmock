@@ -46,16 +46,14 @@ namespace OpcMock
 
         private void btnReadOpcData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(DataFilePath())) return;
-
-            FillOpcDataGrid(opcReader.ReadAllTags());
-        }
-
-        private void EnableButtonsAfterDataFileLoad()
-        {
-            btnSaveTags.Enabled = true;
-            btnReadTags.Enabled = true;
-            btnStep.Enabled = true;
+            if (!isDataFilePathSet())
+            {
+                HandleEmptyDataFilePathOnSaveData();
+            }
+            else
+            {
+                FillOpcDataGrid(opcReader.ReadAllTags());
+            }
         }
 
         private void FillOpcDataGrid(List<OpcTag> opcTags)
@@ -64,31 +62,46 @@ namespace OpcMock
 
             foreach (OpcTag opcTag in opcTags)
             {
-                int newRowIndex = dgvOpcData.Rows.Add();
-
-                dgvOpcData.Rows[newRowIndex].Cells[0].Value = opcTag.Path;
-                dgvOpcData.Rows[newRowIndex].Cells[1].Value = opcTag.Value;
-                dgvOpcData.Rows[newRowIndex].Cells[2].Value = opcTag.Quality.ToString();
-                dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)opcTag.Quality).ToString();
+                AddRowToDataGridView(opcTag);
             }
 
             //Avoid first data cell starting as "Edit" and therefore being cleared
             dgvOpcData.CurrentCell = dgvOpcData.Rows[dgvOpcData.RowCount - 1].Cells[0];
         }
 
-        private void btnSaveData_Click(object sender, EventArgs e)
+        private void AddRowToDataGridView(OpcTag opcTag)
         {
-            if (string.IsNullOrEmpty(DataFilePath()))
-            {
-                MessageBox.Show(Resources.DemoForm_btnSaveData_Click_Set_target_file_tagPath_);
-                
-                return;
-            }
+            int newRowIndex = dgvOpcData.Rows.Add();
 
-            WriteDataToFile();
+            dgvOpcData.Rows[newRowIndex].Cells[0].Value = opcTag.Path;
+            dgvOpcData.Rows[newRowIndex].Cells[1].Value = opcTag.Value;
+            dgvOpcData.Rows[newRowIndex].Cells[2].Value = opcTag.Quality.ToString();
+            dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)opcTag.Quality).ToString();
         }
 
-        private void WriteDataToFile()
+        private void btnSaveData_Click(object sender, EventArgs e)
+        {
+            if (!isDataFilePathSet())
+            {
+                HandleEmptyDataFilePathOnSaveData();
+            }
+            else
+            {
+                WriteData();
+            }
+        }
+
+        private bool isDataFilePathSet()
+        {
+            return !string.IsNullOrEmpty(DataFilePath());
+        }
+
+        private static void HandleEmptyDataFilePathOnSaveData()
+        {
+            MessageBox.Show(Resources.DemoForm_btnSaveData_Click_Set_target_file_tagPath_);
+        }
+
+        private void WriteData()
         {
             if (dgvOpcData.Rows.Count <= 0) return;
             List<OpcTag> tagDataFromDgv = GenerateTagListFromDataGridView();
@@ -100,10 +113,10 @@ namespace OpcMock
         {
             return (from DataGridViewRow dgvr in dgvOpcData.Rows
                     where (dgvr.Index < dgvOpcData.Rows.Count - 1
-                             && dgvr.Cells[0].Value != null
-                             && dgvr.Cells[1].Value != null)
-                    let qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(dgvr.Cells[3].FormattedValue)
-                    select new OpcTag(dgvr.Cells[0].Value.ToString(), dgvr.Cells[1].Value.ToString(), qualityFromInt)).ToList();
+                             && dgvr.Cells["TagName"].Value != null
+                             && dgvr.Cells["TagValue"].Value != null)
+                    let qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(dgvr.Cells["TagQualityValue"].FormattedValue)
+                    select new OpcTag(dgvr.Cells["TagName"].Value.ToString(), dgvr.Cells["TagValue"].Value.ToString(), qualityFromInt)).ToList();
         }
 
         void dgvOpcData_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -122,7 +135,7 @@ namespace OpcMock
 
         private void btnStep_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(DataFilePath())) return;
+            if (!isDataFilePathSet()) return;
 
             ExecuteProtocolLine();
         }
@@ -282,6 +295,13 @@ namespace OpcMock
                 Text = "OPC Mock - " + opcMockProject.Name;
                 EnableButtonsAfterDataFileLoad();
             }
+        }
+
+        private void EnableButtonsAfterDataFileLoad()
+        {
+            btnSaveTags.Enabled = true;
+            btnReadTags.Enabled = true;
+            btnStep.Enabled = true;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
