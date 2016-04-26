@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProtocolLineAddedArgs.cs" />
     <Compile Include="ProtocolAddedArgs.cs" />
     <Compile Include="CreateProjectDialog.cs">
       <SubType>Form</SubType>
