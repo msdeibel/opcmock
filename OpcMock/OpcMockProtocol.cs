@@ -64,5 +64,13 @@ namespace OpcMock
         {
             return Name;
         }
+
+        public void Append(string[] semicolonSeparatedLines)
+        {
+            foreach (string line in semicolonSeparatedLines)
+            {
+                Append(new ProtocolLine(line));
+            }
+        }
     }
 }

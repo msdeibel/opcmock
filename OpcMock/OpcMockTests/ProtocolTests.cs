@@ -77,5 +77,19 @@ namespace OpcMockTests
 
             Assert.IsTrue(eventRaised);
         }
+
+        [TestMethod]
+        public void Append_For_StringArray_Appends_All_Lines()
+        {
+            OpcMockProtocol protocol = new OpcMockProtocol(PROTOCOL_NAME);
+
+            string[] testArray = new string[] { "Set; tagPath1; tagValue; 192", "Set;tagPath2;tagValue;192", "Set;tagPath3;tagValue;192" };
+
+            protocol.Append(testArray);
+
+            Assert.AreEqual(new ProtocolLine("Set;tagPath1;tagValue;192"), protocol.Lines[0]);
+            Assert.AreEqual(new ProtocolLine("Set;tagPath2;tagValue;192"), protocol.Lines[1]);
+            Assert.AreEqual(new ProtocolLine("Set;tagPath3;tagValue;192"), protocol.Lines[2]);
+        }
     }
 }
