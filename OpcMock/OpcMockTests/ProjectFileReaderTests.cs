@@ -51,5 +51,11 @@ namespace OpcMockTests
 
             DeleteProjectFileIfExists();
         }
+
+        [TestMethod]
+        public void Contructor_Loads_Protocols_Of_The_Project()
+        {
+            Assert.Fail("Test not implemented");
+        }
     }
 }
