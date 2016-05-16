@@ -34,9 +34,11 @@ namespace OpcMockTests
             string ompLine1 = "Set;tagPath1;tagValue1;192";
             string ompLine2 = "Set;tagPath2;tagValue2;192";
 
+            ///PROPOSAL refactor into variables to more express the equality
             omp.Append(new ProtocolLine(ompLine1));
             omp.Append(new ProtocolLine(ompLine2));
 
+            ///PROPOSAL expose IEnumberable instead of List
             Assert.AreEqual(new ProtocolLine(ompLine2), omp.Lines[1]);
         }
 
@@ -54,11 +56,17 @@ namespace OpcMockTests
             Assert.AreEqual(PROTOCOL_NAME, omp.ToString());
         }
 
+        /// PROPOSAL - parameterize test ==> NUnit
+        /// 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Empty or spaces-only name should not be accepted")]
         public void Empty_Or_SpacesOnly_Name_Raises_ArgumentException()
         {
             OpcMockProtocol omp = new OpcMockProtocol(string.Empty);
+            
+            ///FIXME these two lines are NEVER executed
+            ///since the exception is already caught and the test ends
+            ///after line 64
             omp = new OpcMockProtocol("    ");
             omp = new OpcMockProtocol("\t");
 

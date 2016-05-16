@@ -39,9 +39,12 @@ namespace OpcMock
             }
         }
 
+
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
+            /// PROPOSAL check if the == operator should be replaced by call to Equals
+            /// ==> MSDN
             return obj is OpcMockProtocol && this == (OpcMockProtocol)obj;
         }
 

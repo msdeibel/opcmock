@@ -17,40 +17,46 @@ namespace OpcMock
         public void WriteAllTags(List<OpcTag> opcTags)
         {
             FileStream dataFileStream = File.Open(DataFilePath, FileMode.Create);
-
-            try
-            {
-                WaitForAndAcquireFileLock();
-
-                StreamWriter streamWriter = new StreamWriter(dataFileStream);
-
-                if (opcTags.Count > 0)
+                try
                 {
-                    foreach (OpcTag o in opcTags)
-                    {
-                        streamWriter.WriteLine(o.Path + ';'
-                                               + o.Value + ';'
-                                               + o.Quality.ToString() + ';'
-                                               + ((int) o.Quality).ToString()
-                            );
-                    }
-                }
+                    WaitForAndAcquireFileLock();
 
-                streamWriter.Flush();
-            }
-            catch (LockFileAcquisitionException exLock)
-            {
-                System.Console.WriteLine("Locking failed");
-            }
-            catch (Exception)
-            {
-                //void
-            }
-            finally
-            {
-                dataFileStream.Close();
-                ReleaseFileLock();
-            }
+                    ///FIXME streamWriter is not closed in finally
+                    /// use "using(...) instead of try
+                    StreamWriter streamWriter = new StreamWriter(dataFileStream);
+
+                    /// PROPOSAL reverse expression and remove if
+                    if (opcTags.Count > 0)
+                    {
+                        /// PROPOSAL extract method to get the same level of abstraction
+                        foreach (OpcTag o in opcTags)
+                        {
+                            streamWriter.WriteLine(o.Path + ';'
+                                                   + o.Value + ';'
+                                                   + o.Quality.ToString() + ';'
+                                                   + ((int)o.Quality).ToString()
+                                );
+                        }
+                    }
+
+                    streamWriter.Flush();
+                }
+                catch (LockFileAcquisitionException)
+                {
+                ///PROPOSAL either use a default or (better in this case) re-throw
+                ///up to the top layer and display something to the user.
+                ///Keep the stack/exception trace
+                    System.Console.WriteLine("Locking failed");
+                }
+                catch (Exception)
+                {
+                    ///FIXME put logging or re-throw
+                }
+                finally
+                {
+                    dataFileStream.Close();
+                    ReleaseFileLock();
+                }
         }
 
         public void WriteSingleTag(OpcTag opcTag)
