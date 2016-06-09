@@ -8,31 +8,30 @@ namespace OpcMockTests
     {
         private const int NEW_PROJECT_PROTOCOL_COUNT = 0;
         private const string PROTOCOL_NAME = "protocolName";
+        private const string PROJECT_NAME = "projectName";
 
-        private string projectName;
         private OpcMockProject opcMockProject;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            projectName = "projectName";
-            opcMockProject = new OpcMockProject(projectName);
+            opcMockProject = new OpcMockProject(PROJECT_NAME);
         }
 
         [TestMethod]
-        public void New_Project_Has_A_Name_Set()
+        public void NewOpcMockProjectShould_Have_The_Name_Field_Set()
         {
-            Assert.AreEqual(projectName, opcMockProject.Name);
+            Assert.AreEqual(PROJECT_NAME, opcMockProject.Name);
         }
 
         [TestMethod]
-        public void New_Project_Has_An_Empty_List_Of_Protocols()
+        public void NewOpcMockProjectShould_Have_An_Empty_List_Of_Protocols()
         {
             Assert.AreEqual(NEW_PROJECT_PROTOCOL_COUNT, opcMockProject.Protocols.Count);
         }
 
         [TestMethod]
-        public void Protocols_Can_Be_Added_To_The_Project()
+        public void AddProtocolShould_Add_A_Protocol_To_The_End_Of_The_List()
         {
             OpcMockProtocol protocolToAdd = new OpcMockProtocol(PROTOCOL_NAME);
 
@@ -43,7 +42,7 @@ namespace OpcMockTests
 
         [TestMethod]
         [ExpectedException(typeof(DuplicateProtocolNameException))]
-        public void Adding_Duplicate_Protocol_Name_Throws_Exception()
+        public void AddProtocolShould_Raise_DuplicateProtocolNameException_On_Duplicate_ProtocolName()
         {
             OpcMockProtocol protocolToAdd = new OpcMockProtocol(PROTOCOL_NAME);
 
@@ -52,7 +51,7 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Adding_Duplicate_Protocol_Does_Not_Raise_OnProtocoAdded()
+        public void AddProtocolShould_Not_Raise_OnProtocolAdded_Event_For_Duplicates()
         {
             bool eventRaised = false;
 

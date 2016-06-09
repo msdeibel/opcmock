@@ -31,15 +31,14 @@ namespace OpcMockTests
         {
             OpcMockProtocol omp = new OpcMockProtocol(PROTOCOL_NAME);
 
-            string ompLine1 = "Set;tagPath1;tagValue1;192";
-            string ompLine2 = "Set;tagPath2;tagValue2;192";
+            string line1 = "Set;tagPath1;tagValue1;192";
+            string lineEqualToLine1 = "Set;tagPath2;tagValue2;192";
 
-            ///PROPOSAL refactor into variables to more express the equality
-            omp.Append(new ProtocolLine(ompLine1));
-            omp.Append(new ProtocolLine(ompLine2));
+            omp.Append(new ProtocolLine(line1));
+            omp.Append(new ProtocolLine(lineEqualToLine1));
 
             ///PROPOSAL expose IEnumberable instead of List
-            Assert.AreEqual(new ProtocolLine(ompLine2), omp.Lines[1]);
+            Assert.AreEqual(new ProtocolLine(lineEqualToLine1), omp.Lines[1]);
         }
 
         [TestMethod]
@@ -59,17 +58,24 @@ namespace OpcMockTests
         /// PROPOSAL - parameterize test ==> NUnit
         /// 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Empty or spaces-only name should not be accepted")]
+        [ExpectedException(typeof(ArgumentException), "Empty name should not be accepted")]
         public void Empty_Or_SpacesOnly_Name_Raises_ArgumentException()
         {
             OpcMockProtocol omp = new OpcMockProtocol(string.Empty);
-            
-            ///FIXME these two lines are NEVER executed
-            ///since the exception is already caught and the test ends
-            ///after line 64
-            omp = new OpcMockProtocol("    ");
-            omp = new OpcMockProtocol("\t");
+        }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Blanks-only name should not be accepted")]
+        public void OpcMockProtocolConstructor_Should_Raise_ArgumentException_For_BlanksOnly_Name()
+        {
+            OpcMockProtocol omp = new OpcMockProtocol("    ");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Tabs-only name should not be accepted")]
+        public void OpcMockProtocolConstructor_Should_Raise_ArgumentException_For_TabsOnly_Name()
+        {
+            OpcMockProtocol omp = new OpcMockProtocol("\t");
         }
 
         [TestMethod]

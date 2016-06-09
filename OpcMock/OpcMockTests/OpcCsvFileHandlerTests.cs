@@ -12,7 +12,6 @@ namespace OpcMockTests
     [TestClass()]
     public class OpcCsvFileHandlerTests : OpcMockTestsBase
     {
-
         private int lockAcquistionRetriesAnyIntGreater0;
 
         [TestInitialize]
@@ -29,20 +28,13 @@ namespace OpcMockTests
             DeleteDataFileIfExists();
         }
 
-        /// PROPOSAL
-        /// CsvFileHandlerShould_Set_DataFilePath
         [TestMethod()]
-        public void Constructor_Sets_DataFilePath()
+        public void CsvFileHandlerShould_Set_DataFilePath()
         {
-            /// PROPOSAL
-            /// Pass dataFilePath as parameter (see proposal below)
-            CreateDataFileIfDoesNotExist();
+            CreateDataFileIfDoesNotExist(dataFilePath);
 
             OpcCsvFileHandler ocfh = new OpcCsvFileHandler(dataFilePath, lockAcquistionRetriesAnyIntGreater0);
 
-            /// PROPOSAL
-            //If something is part of the assertion it should be visible
-            //in the setup part of the test(method)
             Assert.AreEqual(dataFilePath, ocfh.DataFilePath);
         }
 
@@ -58,11 +50,11 @@ namespace OpcMockTests
         [ExpectedException(typeof(ArgumentException))]
         public void Contructor_Throws_Exception_For_Wrong_File_Extension()
         {
-            dataFilePath = dataFilePath.Replace(FileExtensionContants.FileExtensionData, ".abc");
+            string arbitraryFileExtension = ".abc";
+
+            dataFilePath = dataFilePath.Replace(FileExtensionContants.FileExtensionData, arbitraryFileExtension);
 
             OpcCsvFileHandler ocfh = new OpcCsvFileHandler(dataFilePath, lockAcquistionRetriesAnyIntGreater0);
         }
-
-
     }
 }

@@ -1,55 +1,46 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpcMock;
 using System.IO;
+using System.Xml.Linq;
 
 namespace OpcMockTests
 {
     [TestClass]
     public class ProjectFileReaderTests : OpcMockTestsBase
     {
-        private string PROJECT_NAME = "testName";
+        private const string PROJECT_NAME = "testName";
+        private XElement fileContetAsXml = new XElement("project", new XElement("project_name", PROJECT_NAME));
 
-        [TestMethod]
-        public void Constructor_Loads_Project_File_Content_Into_Member()
+        [TestInitialize]
+        public void TestInitialize()
         {
-            string projectFileContent = string.Empty;
+            projectFilePath = Path.Combine(TestContext.TestDir, PROJECT_NAME + OpcMockConstants.FileExtensionProject);
+        }
 
-            projectFilePath = TestContext.TestDir + "\\" + PROJECT_NAME + OpcMockConstants.FileExtensionProject;
-
-            projectFileContent = "<project>" + Environment.NewLine
-                                    + "    <project_name>" + PROJECT_NAME + "</project_name>"
-                                    + Environment.NewLine
-                                    + "</project>";
-
-            File.WriteAllText(projectFilePath, projectFileContent);
-
-            ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
-
-            Assert.AreEqual(projectFileContent, pfr.ProjectFileContent);
-
+        [TestCleanup]
+        public void TestCleanup()
+        {
             DeleteProjectFileIfExists();
         }
 
         [TestMethod]
-        public void Contructor_Creates_OpcMockProject_With_Correct_Name()
+        public void ConstructorShould_Load_Project_File_Content_Into_Member()
         {
-            string projectFileContent = string.Empty;
+            File.WriteAllText(projectFilePath, fileContetAsXml.ToString());
 
-            projectFilePath = TestContext.TestDir + "\\" + PROJECT_NAME + OpcMockConstants.FileExtensionProject;
+            ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
-            projectFileContent = "<project>" + Environment.NewLine
-                                    + "    <project_name>" + PROJECT_NAME + "</project_name>"
-                                    + Environment.NewLine
-                                    + "</project>";
+            Assert.AreEqual(fileContetAsXml.ToString(), pfr.ProjectFileContent);
+        }
 
-            File.WriteAllText(projectFilePath, projectFileContent);
+        [TestMethod]
+        public void ContructorShouldCreates_OpcMockProject_With_Correct_Name()
+        {
+            File.WriteAllText(projectFilePath, fileContetAsXml.ToString());
 
             ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
             Assert.AreEqual(PROJECT_NAME, pfr.OpcMockProject.Name);
-
-            DeleteProjectFileIfExists();
         }
 
         [TestMethod]

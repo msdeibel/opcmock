@@ -1,10 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpcMock;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpcMockTests
 {
@@ -12,7 +7,7 @@ namespace OpcMockTests
     public class OpcTagTests
     {
         [TestMethod()]
-        public void Equals_Method_OK_For_Equal_OpcTags()
+        public void EqualsShould_Be_True_For_Equal_Tags()
         {
             OpcTag ot1 = new OpcTag("ot1", "value1");
             OpcTag ot1Compare = new OpcTag("ot1", "value1");
@@ -21,42 +16,42 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Equals_Method_OK_For_UnEqual_OpcTags()
+        public void EqualsShould_Be_False_For_Tags_Differing_In_One_Or_More_Fields()
         {
             OpcTag ot1 = new OpcTag("ot1", "value1", OpcTag.OpcTagQuality.Good);
 
-            OpcTag ot2 = new OpcTag("ot2", "value1", OpcTag.OpcTagQuality.Good);
-            Assert.IsFalse(ot1.Equals(ot2));
+            OpcTag notEqualtToOt1 = new OpcTag("ot2", "value1", OpcTag.OpcTagQuality.Good);
+            Assert.IsFalse(ot1.Equals(notEqualtToOt1));
 
-            ot2 = new OpcTag("ot1", "value2", OpcTag.OpcTagQuality.Good);
-            Assert.IsFalse(ot1.Equals(ot2));
+            notEqualtToOt1 = new OpcTag("ot1", "value2", OpcTag.OpcTagQuality.Good);
+            Assert.IsFalse(ot1.Equals(notEqualtToOt1));
 
-            ot2 = new OpcTag("ot1", "value1", OpcTag.OpcTagQuality.Bad);
-            Assert.IsFalse(ot1.Equals(ot2));
+            notEqualtToOt1 = new OpcTag("ot1", "value1", OpcTag.OpcTagQuality.Bad);
+            Assert.IsFalse(ot1.Equals(notEqualtToOt1));
 
-            ot2 = new OpcTag("ot1", "value2", OpcTag.OpcTagQuality.Bad);
-            Assert.IsFalse(ot1.Equals(ot2));
+            notEqualtToOt1 = new OpcTag("ot1", "value2", OpcTag.OpcTagQuality.Bad);
+            Assert.IsFalse(ot1.Equals(notEqualtToOt1));
 
-            ot2 = new OpcTag("ot2", "value2", OpcTag.OpcTagQuality.Bad);
-            Assert.IsFalse(ot1.Equals(ot2));
+            notEqualtToOt1 = new OpcTag("ot2", "value2", OpcTag.OpcTagQuality.Bad);
+            Assert.IsFalse(ot1.Equals(notEqualtToOt1));
         }
 
         [TestMethod]
-        public void Equality_Operator_OK_For_Equal_OpcTags()
+        public void EqualOperatorShould_Be_True_For_Equal_OpcTags()
         {
             OpcTag ot1 = new OpcTag("ot1", "value1");
-            OpcTag ot1Compare = new OpcTag("ot1", "value1");
+            OpcTag equalToOt1 = new OpcTag("ot1", "value1");
 
-            Assert.IsTrue(ot1 == ot1Compare);
+            Assert.IsTrue(ot1 == equalToOt1);
         }
 
         [TestMethod]
-        public void NotEqual_Operator_OK_For_Unequal_OpcTags()
+        public void NotEqualOperatorShould_Be_True_For_Unequal_OpcTags()
         {
             OpcTag ot1 = new OpcTag("ot1", "value1");
-            OpcTag ot2 = new OpcTag("ot2", "value1");
+            OpcTag notEqualToOt1 = new OpcTag("ot2", "value1");
 
-            Assert.IsTrue(ot1 != ot2);
+            Assert.IsTrue(ot1 != notEqualToOt1);
         }
     }
 }

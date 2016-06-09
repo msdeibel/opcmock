@@ -11,11 +11,11 @@ namespace OpcMockTests
 
         public TestContext TestContext
         {
-            get { return this.testContext; }
-            set { this.testContext = value; }
+            get { return testContext; }
+            set { testContext = value; }
         }
 
-        protected void CreateDataFileIfDoesNotExist()
+        protected void CreateDataFileIfDoesNotExist(string dataFilePath)
         {
             if (!File.Exists(dataFilePath))
             {

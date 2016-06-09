@@ -18,18 +18,24 @@ namespace OpcMockTests
         public void TestInitialize()
         {
             dataFilePath = TestContext.TestDir + "\\testdatafile" + FileExtensionContants.FileExtensionData;
+            DeleteDataFileIfExists();
+            CreateDataFileIfDoesNotExist(dataFilePath);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            DeleteDataFileIfExists();
         }
 
         [TestMethod()]
-        public void Write_All_Tags_Works_With_Empty_DataFile()
+        public void WriteAllTagsShould_Work_With_Empty_DataFile()
         {
             List<OpcTag> allOpcTags = new List<OpcTag>();
 
             allOpcTags.Add(new OpcTag("opcTagPath1", "opcTagValue1", OpcTag.OpcTagQuality.Good));
             allOpcTags.Add(new OpcTag("opcTagPath2", "opcTagValue2", OpcTag.OpcTagQuality.Bad));
             allOpcTags.Add(new OpcTag("opcTagPath3", "opcTagValue3", OpcTag.OpcTagQuality.Unknown));
-
-            CreateDataFileIfDoesNotExist();
 
             opcWriterCsv = new OpcWriterCsv(dataFilePath);
 
@@ -42,19 +48,15 @@ namespace OpcMockTests
             string actualFileContent = File.ReadAllText(dataFilePath);
 
             Assert.AreEqual(expectedFileContent, actualFileContent);
-
-            DeleteDataFileIfExists();
         }
 
         [TestMethod()]
-        public void Write_All_Tags_Overwrites_DataFile_Content()
+        public void WriteAllTagsShould_Overwrite_DataFile_Content()
         {
             List<OpcTag> allOpcTags = new List<OpcTag>();
 
             allOpcTags.Add(new OpcTag("opcTagPath1", "opcTagValue1", OpcTag.OpcTagQuality.Good));
             allOpcTags.Add(new OpcTag("opcTagPath2", "opcTagValue2", OpcTag.OpcTagQuality.Bad));
-
-            CreateDataFileIfDoesNotExist();
 
             opcWriterCsv = new OpcWriterCsv(dataFilePath);
 
@@ -73,15 +75,11 @@ namespace OpcMockTests
             string actualFileContent = File.ReadAllText(dataFilePath);
 
             Assert.AreEqual(expectedFileContent, actualFileContent);
-
-            DeleteDataFileIfExists();
         }
 
         [TestMethod()]
-        public void Write_Single_Tag_Into_Empty_DataFile_Has_No_Leading_Newline()
+        public void WriteSingleTagShould_Not_Produce_A_Leading_NewLine_In_AnEmpty_DataFile()
         {
-            CreateDataFileIfDoesNotExist();
-
             opcWriterCsv = new OpcWriterCsv(dataFilePath);
 
             opcWriterCsv.WriteSingleTag(new OpcTag("opcTagSingle", "opcValueSingle", OpcTag.OpcTagQuality.Good));
@@ -91,15 +89,11 @@ namespace OpcMockTests
             string actualFileContent = File.ReadAllText(dataFilePath);
 
             Assert.AreEqual(expectedFileContent, actualFileContent);
-
-            DeleteDataFileIfExists();
         }
 
         [TestMethod]
-        public void Write_Single_Tag_Into_DataFile_With_Content_Has_Leading_Newline()
+        public void WriteSingleTagShould_Create_A_Leading_New_Line_If_DataFile_Has_Content()
         {
-            CreateDataFileIfDoesNotExist();
-
             opcWriterCsv = new OpcWriterCsv(dataFilePath);
             opcWriterCsv.WriteSingleTag(new OpcTag("opcTagSingle", "opcValueSingle", OpcTag.OpcTagQuality.Good));
             opcWriterCsv.WriteSingleTag(new OpcTag("opcTagSingle2", "opcValueSingle2", OpcTag.OpcTagQuality.Bad));
@@ -110,16 +104,11 @@ namespace OpcMockTests
             string actualFileContent = File.ReadAllText(dataFilePath);
 
             Assert.AreEqual(expectedFileContent, actualFileContent);
-
-            DeleteDataFileIfExists();
         }
 
         [TestMethod]
-        public void Write_Single_Tag_Overwrites_Existing_Tag_Information_In_DataFile()
+        public void WriteSingleTagShould_Overwrite_Existing_Tag_Information_In_DataFile()
         {
-
-            CreateDataFileIfDoesNotExist();
-
             opcWriterCsv = new OpcWriterCsv(dataFilePath);
 
             opcWriterCsv.WriteSingleTag(new OpcTag("opcTagSingle", "opcValueSingle", OpcTag.OpcTagQuality.Good));
@@ -133,9 +122,6 @@ namespace OpcMockTests
             string actualFileContent = File.ReadAllText(dataFilePath);
 
             Assert.AreEqual(expectedFileContent, actualFileContent);
-
-            DeleteDataFileIfExists();
-
         }
     }
 }
