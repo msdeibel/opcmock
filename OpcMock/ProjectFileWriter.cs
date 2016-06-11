@@ -27,10 +27,11 @@ namespace OpcMock
         public void Save()
         {
             StringBuilder stringBuilder = new StringBuilder();
+            string twoSpaces = "  ";
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
-            settings.IndentChars = "    ";
+            settings.IndentChars = twoSpaces;
             settings.OmitXmlDeclaration = true;
 
             XmlWriter xmlWriter = XmlWriter.Create(stringBuilder, settings);
