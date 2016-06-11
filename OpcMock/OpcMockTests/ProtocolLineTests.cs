@@ -12,7 +12,7 @@ namespace OpcMock.Tests
     public class ProtocolLineTests
     {
         [TestMethod()]
-        public void Constructor_Parses_Valid_Protocol_Line_Without_Blanks()
+        public void ConstructorShould_Parse_Valid_Protocol_Line_Without_Blanks()
         {
             ProtocolLine protocolLine = new ProtocolLine("Set;tagPath;tagValue;192");
 
@@ -23,7 +23,7 @@ namespace OpcMock.Tests
         }
 
         [TestMethod()]
-        public void Constructor_Parses_Valid_Protocol_Line_With_Blanks()
+        public void ConstructorShould_Parse_Valid_Protocol_Line_With_Blanks()
         {
             ProtocolLine protocolLine = new ProtocolLine("Set; tagPath; tagValue; 192");
 
@@ -33,42 +33,45 @@ namespace OpcMock.Tests
             Assert.AreEqual("192", protocolLine.TagQualityInt);
         }
 
+        /// FIXME Core Exceptions should be encapsulated
         [TestMethod()]
         [ExpectedException(typeof(ArgumentException))]
-        public void Whitespace_Only_Protocol_Line_Argument_Causes_Exception()
+        public void WhitespacesOnlyProtocolLineShould_Cause_An_ArgumentException()
         {
             ProtocolLine protocolLine = new ProtocolLine(" \t");
         }
 
+        /// FIXME Core Exceptions should be encapsulated
         [TestMethod()]
         [ExpectedException(typeof(ArgumentException))]
-        public void Empty_Protocol_Line_Argument_Causes_Exception()
+        public void EmptyProtocolLineShould_Cause_An_ArgumentExceptionn()
         {
             ProtocolLine protocolLine = new ProtocolLine(string.Empty);
         }
 
         [TestMethod()]
         [ExpectedException(typeof(ProtocolActionException))]
-        public void Unknown_Action_Causes_Exception()
+        public void UnknownActionShould_Cause_A_ProtocolActionException()
         {
             ProtocolLine protocolLine = new ProtocolLine("UnSet; tagPath; tagValue; 192");
         }
 
+        /// FIXME Core Exceptions should be encapsulated
         [TestMethod()]
         [ExpectedException(typeof(IndexOutOfRangeException))]
-        public void Invalid_Line_Causes_Exception()
+        public void InvalidLineShould_Cause_An_IndexOutOfRangeException()
         {
             ProtocolLine protocolLine = new ProtocolLine("Set; tagPath; tagValue");
         }
 
         [TestMethod()]
-        public void Dummy_Line_Is_Valid()
+        public void DummyShould_Be_A_Valid_Contructor_Parameter()
         {
             ProtocolLine protocolLine = new ProtocolLine("Dummy");
         }
 
         [TestMethod()]
-        public void Equals_Method_OK_For_Equal_Protocol_Lines()
+        public void EqualsShould_Work_For_Equal_Protocol_Lines()
         {
             ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
             ProtocolLine pl2 = new ProtocolLine("Set;tagPath1;tagValue1;192");
@@ -77,7 +80,7 @@ namespace OpcMock.Tests
         }
 
         [TestMethod]
-        public void Equals_Method_OK_For_UnEqual_Protocol_Lines()
+        public void EqualsShould_Work_For_UnEqual_Protocol_Lines()
         {
             ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
 
@@ -98,7 +101,7 @@ namespace OpcMock.Tests
         }
 
         [TestMethod]
-        public void Equality_Operator_OK_For_Protocol_Lines()
+        public void EqualityOperatorShould_Work_OK_For_Protocol_Lines()
         {
             ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
             ProtocolLine pl2 = new ProtocolLine("Set;tagPath1;tagValue1;192");
@@ -107,7 +110,7 @@ namespace OpcMock.Tests
         }
 
         [TestMethod]
-        public void NotEqual_Operator_OK_For_Unequal_Protocol_Lines()
+        public void NotEqualOperatorShould_Work_For_Unequal_Protocol_Lines()
         {
             ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
             ProtocolLine pl2 = new ProtocolLine("Dummy;tagPath1;tagValue1;192");
@@ -116,7 +119,7 @@ namespace OpcMock.Tests
         }
 
         [TestMethod]
-        public void ToString_Without_Parameter_Produces_Semicolon_Separated_String()
+        public void ToStringWithoutParametersShould_Produce_Semicolon_Separated_String()
         {
             ProtocolLine protocolLine = new ProtocolLine("Set;tagPath;tagValue;192");
 
