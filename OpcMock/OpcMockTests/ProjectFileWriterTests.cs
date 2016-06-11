@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpcMock.Tests;
 using System.IO;
 using OpcMock;
+using System.Xml.Linq;
 
 namespace OpcMockTests
 {
@@ -18,9 +19,7 @@ namespace OpcMockTests
 
         public ProjectFileWriterTests()
         {
-            //
-            // TODO: Konstruktorlogik hier hinzufügen
-            //
+            //void
         }
 
         [TestInitialize]
@@ -40,7 +39,7 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Create_Project_File_In_Project_Path()
+        public void SaveShould_Create_File_In_Project_Path()
         {
             projectFileWriter.Save();
 
@@ -48,7 +47,7 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Create_Project_File_With_Correct_Name_And_Extension()
+        public void SaveShould_Use_Correct_FileName_And_Extension()
         {
             projectFileWriter.Save();
 
@@ -57,61 +56,49 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Create_Project_File_Contains_Name_Segment()
+        public void SaveShould_Write_Project_Name_And_Empty_ProtocolList_Segment()
         {
-            string expectedFileContentStart = "<project>" + Environment.NewLine
-                                         + "    <project_name>" + PROJECT_NAME + "</project_name>" 
-                                         + Environment.NewLine;
+            XElement expectedFileContent = new XElement("project",
+                                                            new XElement("project_name", PROJECT_NAME),
+                                                            new XElement("protocol_list"));
 
-            SaveContentToFileAndCheckResult(expectedFileContentStart);
+            SaveContentToFileAndCheckResult(expectedFileContent.ToString());
         }
 
         [TestMethod]
-        public void Save_Project_File_Contains_Empty_ProtocolList_Segment()
-        {
-            string expectedFileContentStart = "<project>" + Environment.NewLine
-                                              + "    <project_name>" + PROJECT_NAME + "</project_name>" 
-                                              + Environment.NewLine
-                                              + "    <protocol_list />"
-                                              + Environment.NewLine;
-
-            SaveContentToFileAndCheckResult(expectedFileContentStart);
-        }
-
-        [TestMethod]
-        public void Save_Project_File_Contains_ProtocolList_With_One_Protocol()
+        public void SaveShould_Write_Protocol_Segment()
         {
             OpcMockProject projectWithOneProtocol = new OpcMockProject(PROJECT_NAME);
-            projectWithOneProtocol.AddProtocol(new OpcMockProtocol("firstProtocol"));
+            string firstProtocolName = "firstProtocol";
+
+            projectWithOneProtocol.AddProtocol(new OpcMockProtocol(firstProtocolName));
 
             projectFileWriter = new ProjectFileWriter(projectWithOneProtocol, TestContext.TestDir);
+         
+            XElement fileContentStartXml = new XElement("project", 
+                                                            new XElement("project_name", PROJECT_NAME),
+                                                            new XElement("protocol_list",
+                                                                new XElement("protocol", firstProtocolName)));
 
-            string expectedFileContentStart =   "<project>" + Environment.NewLine
-                                              + "    <project_name>" + PROJECT_NAME + "</project_name>" + Environment.NewLine
-                                              + "    <protocol_list>"
-                                              + Environment.NewLine
-                                              + "        <protocol>firstProtocol</protocol>"
-                                              + Environment.NewLine
-                                              + "    </protocol_list>"
-                                              + Environment.NewLine;
-
-            SaveContentToFileAndCheckResult(expectedFileContentStart);
+            SaveContentToFileAndCheckResult(fileContentStartXml.ToString());
         }
 
         [TestMethod]
-        public void Project_Folder_Returns_Path_Without_Trailing_Backslash()
+        public void FolderPathShould_Not_Contain_A_Trailing_DirectorySeparator()
         {
             Assert.AreEqual(TestContext.TestDir, projectFileWriter.FolderPath);
-            Assert.IsFalse(TestContext.TestDir.EndsWith("\\"));
+            Assert.IsFalse(projectFileWriter.FolderPath.EndsWith(Path.DirectorySeparatorChar.ToString()));
         }
 
         void SaveContentToFileAndCheckResult(string expectedFileContentStart)
         {
             projectFileWriter.Save();
 
-            string actualFileContent = File.ReadAllText(projectFilePath).Substring(0, expectedFileContentStart.Length);
+            string actualFileContent = File.ReadAllText(projectFilePath);
+                
+            string contentToCheck = actualFileContent.Substring(0, expectedFileContentStart.Length);
 
-            Assert.AreEqual(expectedFileContentStart, actualFileContent);
+            Assert.AreEqual(expectedFileContentStart, contentToCheck);
         }
     }
 }
