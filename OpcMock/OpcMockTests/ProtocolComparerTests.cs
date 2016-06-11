@@ -10,7 +10,7 @@ namespace OpcMockTests
         private const int EQUALITY = 0;
 
         [TestMethod]
-        public void Protocols_With_The_Same_Name_Are_Equal()
+        public void ProtocolsWithTheSameNameShould_Be_Equal()
         {
             ProtocolComparer pc = new ProtocolComparer();
 
