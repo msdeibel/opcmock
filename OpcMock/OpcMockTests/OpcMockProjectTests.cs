@@ -63,7 +63,7 @@ namespace OpcMockTests
 
                 //Add the handler only after the first addition otherwise eventRaised
                 //is wrongly set to true
-                opcMockProject.OnProtocolAdded += delegate (ProtocolAddedArgs paArgs) { eventRaised = true; };
+                opcMockProject.OnProtocolAdded += delegate (object sender, ProtocolAddedArgs paArgs) { eventRaised = true; };
 
                 opcMockProject.AddProtocol(protocolToAdd);
             }

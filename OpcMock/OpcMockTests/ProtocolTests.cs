@@ -85,7 +85,7 @@ namespace OpcMockTests
 
             OpcMockProtocol protocol = new OpcMockProtocol(PROTOCOL_NAME);
 
-            protocol.OnProtocolLineAdded += delegate (ProtocolLineAddedArgs plaArgs) { eventRaised = true; };
+            protocol.OnProtocolLineAdded += delegate (object sender, ProtocolLineAddedArgs plaArgs) { eventRaised = true; };
 
             protocol.Append(new ProtocolLine("Set;tagPath;tagValue;192"));
 

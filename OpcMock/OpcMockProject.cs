@@ -14,7 +14,7 @@ namespace OpcMock
             Protocols = new List<OpcMockProtocol>();
         }
 
-        public delegate void ProtocolHandler(ProtocolAddedArgs protocolAddedArgs);
+        public delegate void ProtocolHandler(object sender, ProtocolAddedArgs e);
 
         public event ProtocolHandler OnProtocolAdded;
 
@@ -34,7 +34,7 @@ namespace OpcMock
 
             if (null != OnProtocolAdded)
             {
-                OnProtocolAdded(new ProtocolAddedArgs(protocolToAdd));
+                OnProtocolAdded(this, new ProtocolAddedArgs(protocolToAdd));
             }
         }
     }

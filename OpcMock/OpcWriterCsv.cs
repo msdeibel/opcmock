@@ -1,62 +1,68 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 
 namespace OpcMock
 {
     public class OpcWriterCsv : OpcCsvFileHandler, OpcWriter
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public OpcWriterCsv(string dataFilePath)
             : base(dataFilePath)
         {
             //void
         }
 
+        /// <summary>
+        /// Writes all tags to the data file
+        /// </summary>
+        /// <param name="opcTags"></param>
+        /// <exception cref="LockFileAcquisitionException"></exception>
+        /// <exception cref="Exception"></exception>
         public void WriteAllTags(List<OpcTag> opcTags)
         {
-            FileStream dataFileStream = File.Open(DataFilePath, FileMode.Create);
-                try
-                {
-                    WaitForAndAcquireFileLock();
+            StreamWriter streamWriter = new StreamWriter(DataFilePath, false);
 
-                    ///FIXME streamWriter is not closed in finally
-                    /// use "using(...) instead of try
-                    StreamWriter streamWriter = new StreamWriter(dataFileStream);
+            try
+            {
+                WaitForAndAcquireFileLock();
 
-                    /// PROPOSAL reverse expression and remove if
-                    if (opcTags.Count > 0)
-                    {
-                        /// PROPOSAL extract method to get the same level of abstraction
-                        foreach (OpcTag o in opcTags)
-                        {
-                            streamWriter.WriteLine(o.Path + ';'
-                                                   + o.Value + ';'
-                                                   + o.Quality.ToString() + ';'
-                                                   + ((int)o.Quality).ToString()
-                                );
-                        }
-                    }
+                WriteTagsToFile(opcTags, ref streamWriter);
+            }
+            catch (LockFileAcquisitionException exLock)
+            {
+                logger.Error("Locking of data file failed", exLock);
 
-                    streamWriter.Flush();
-                }
-                catch (LockFileAcquisitionException)
-                {
-                ///PROPOSAL either use a default or (better in this case) re-throw
-                ///up to the top layer and display something to the user.
-                ///Keep the stack/exception trace
-                    System.Console.WriteLine("Locking failed");
-                }
-                catch (Exception)
-                {
-                    ///FIXME put logging or re-throw
-                }
-                finally
-                {
-                    dataFileStream.Close();
-                    ReleaseFileLock();
-                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ex.Message, new object[] { });
+
+                throw;
+            }
+            finally
+            {
+                streamWriter.Close();
+                ReleaseFileLock();
+            }
+        }
+
+        private static void WriteTagsToFile(List<OpcTag> opcTags, ref StreamWriter streamWriter)
+        {
+            foreach (OpcTag o in opcTags)
+            {
+                streamWriter.WriteLine(o.Path + ';'
+                                        + o.Value + ';'
+                                        + o.Quality.ToString() + ';'
+                                        + ((int)o.Quality).ToString()
+                    );
+            }
+
+            streamWriter.Flush();
         }
 
         public void WriteSingleTag(OpcTag opcTag)
@@ -65,7 +71,7 @@ namespace OpcMock
             {
                 WaitForAndAcquireFileLock();
 
-                bool tagUpdated = false;
+                //bool tagUpdated = false;
                 string opcTagLine = opcTag.Path + ';'
                                      + opcTag.Value + ';'
                                      + opcTag.Quality.ToString() + ';'
@@ -89,7 +95,9 @@ namespace OpcMock
             }
             catch (LockFileAcquisitionException exLock)
             {
-                System.Console.WriteLine("Locking failed");
+                logger.Error("Locking of data file failed", exLock);
+
+                throw;
             }
             finally
             {

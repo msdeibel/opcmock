@@ -380,7 +380,7 @@ namespace OpcMock
             }
         }
 
-        private void opcMockProject_OnProtocolAdded(ProtocolAddedArgs protocolAddedArgs)
+        private void opcMockProject_OnProtocolAdded(object sender, ProtocolAddedArgs protocolAddedArgs)
         {
             UpdateProtocolComboBox();
         }

@@ -9,7 +9,7 @@ namespace OpcMock
         public string Name { get; internal set; }
         private List<ProtocolLine> lines;
 
-        public delegate void ProtocolLineAddedHandler(ProtocolLineAddedArgs plaArgs);
+        public delegate void ProtocolLineAddedHandler(object sender, ProtocolLineAddedArgs e);
 
         public event ProtocolLineAddedHandler OnProtocolLineAdded;
 
@@ -35,7 +35,7 @@ namespace OpcMock
 
             if (null != OnProtocolLineAdded)
             {
-                OnProtocolLineAdded(new ProtocolLineAddedArgs(protocolLine));
+                OnProtocolLineAdded(this, new ProtocolLineAddedArgs(protocolLine));
             }
         }
 
