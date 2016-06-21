@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace OpcMock
@@ -19,12 +20,25 @@ namespace OpcMock
 
         private OpcMockProject ParseFileContent()
         {
+            OpcMockProject omp; 
+
             XmlDocument doc = new XmlDocument();
             doc.Load(projectFilePath);
 
             string projectName = doc.GetElementsByTagName("project_name")[0].InnerText;
 
-            return new OpcMockProject(projectName);
+            omp = new OpcMockProject(projectName);
+
+            List<string> protocolNames = new List<string>();
+
+            XmlNodeList protocolTags = doc.GetElementsByTagName("protocol");
+
+            foreach (XmlNode protocolTag in protocolTags)
+            {
+                omp.AddProtocol(new OpcMockProtocol(protocolTag.InnerText));
+            }
+
+            return omp;
         }
 
         public string ProjectFileContent

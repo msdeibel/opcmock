@@ -9,7 +9,7 @@ namespace OpcMockTests
     public class ProjectFileReaderTests : OpcMockTestsBase
     {
         private const string PROJECT_NAME = "testName";
-        private XElement fileContetAsXml = new XElement("project", new XElement("project_name", PROJECT_NAME));
+        
 
         [TestInitialize]
         public void TestInitialize()
@@ -26,17 +26,21 @@ namespace OpcMockTests
         [TestMethod]
         public void ConstructorShould_Load_Project_File_Content_Into_Member()
         {
-            File.WriteAllText(projectFilePath, fileContetAsXml.ToString());
+            XElement fileContentAsXml = new XElement("project", new XElement("project_name", PROJECT_NAME));
+
+            File.WriteAllText(projectFilePath, fileContentAsXml.ToString());
 
             ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
-            Assert.AreEqual(fileContetAsXml.ToString(), pfr.ProjectFileContent);
+            Assert.AreEqual(fileContentAsXml.ToString(), pfr.ProjectFileContent);
         }
 
         [TestMethod]
         public void ContructorShouldCreates_OpcMockProject_With_Correct_Name()
         {
-            File.WriteAllText(projectFilePath, fileContetAsXml.ToString());
+            XElement fileContentAsXml = new XElement("project", new XElement("project_name", PROJECT_NAME));
+
+            File.WriteAllText(projectFilePath, fileContentAsXml.ToString());
 
             ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
@@ -44,9 +48,24 @@ namespace OpcMockTests
         }
 
         [TestMethod]
-        public void Contructor_Loads_Protocols_Of_The_Project()
+        public void ContructorShould_Load_ProtocolNames_Of_The_Project()
         {
-            Assert.Fail("Test not implemented");
+            string protocol1Name = "protocol1";
+            string protocol2Name = "protocol2";
+
+            XElement fileContentAsXml = new XElement("project", new XElement("project_name", PROJECT_NAME),
+                                                                new XElement("protocol_list", 
+                                                                    new XElement("protocol", protocol1Name),
+                                                                    new XElement("protocol", protocol2Name)));
+
+            File.WriteAllText(projectFilePath, fileContentAsXml.ToString());
+
+            ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
+
+            Assert.AreEqual(2, pfr.OpcMockProject.Protocols.Count);
+
+            Assert.AreEqual(protocol1Name, pfr.OpcMockProject.Protocols[0].Name);
+            Assert.AreEqual(protocol2Name, pfr.OpcMockProject.Protocols[1].Name);
         }
     }
 }
